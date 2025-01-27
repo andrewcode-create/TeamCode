@@ -240,6 +240,16 @@ public class SlidesAndRotate {
         // check if encoders don't match, with buffer
         if (Math.abs(slide.getCurrentPosition() - slide2.getCurrentPosition()) > SlideBuffer) {
             stateSlide = State.Broken;
+        } else if (stateSlide == State.Broken) {
+            // state is broken, but within limits
+            stateSlide = State.DriverControlled;
+            if (VModeSlide) {
+                slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                slide2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            } else {
+                slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                slide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
         }
 
         // stop slide motors if broken
