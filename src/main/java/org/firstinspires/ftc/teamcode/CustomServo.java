@@ -1,0 +1,60 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.hardware.Servo;
+
+public class CustomServo {
+    private Servo servo;
+
+    private final double openPos;
+    private final double closePos;
+    private final double changePos; // change per second
+    private final double midPos;
+    private Position pos;
+
+    public CustomServo(double open, double close, double mid, double change) {
+        openPos = open;
+        closePos = close;
+        midPos = mid;
+        changePos = change;
+    }
+    public CustomServo(double open, double close) {
+        this(open, close, (open+close)/2, 0.5);
+    }
+    public CustomServo(double open, double close, double mid) {
+        this(open, close, mid, 0.5);
+    }
+
+    public enum Position {
+        open,
+        close,
+        mid,
+        none,
+    }
+
+    public void init(Servo servo, Position startingPosition) {
+        this.servo = servo;
+    }
+
+    public void moveToPos(Position newPos) {
+        if (newPos == Position.open) {
+            servo.setPosition(openPos);
+            pos = Position.open;
+        } else if (newPos == Position.close) {
+            servo.setPosition(closePos);
+            pos = Position.close;
+        } else if (newPos == Position.mid) {
+            servo.setPosition(midPos);
+            pos = Position.mid;
+        }
+    }
+
+    public void move(long msElapsed, boolean forwards) {
+        if (forwards) {
+            servo.setPosition(servo.getPosition() + msElapsed*changePos/1000);
+        } else {
+            servo.setPosition(servo.getPosition() - msElapsed*changePos/1000);
+        }
+        pos = Position.none;
+    }
+
+}
