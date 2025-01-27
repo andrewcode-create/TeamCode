@@ -69,6 +69,19 @@ public class TeleopMain extends LinearOpMode {
             currentGamepad1.copy(gamepad1);
             currentGamepad2.copy(gamepad2);
 
+            // do sync if necessary
+            if (currentGamepad1.options && !previousGamepad1.options || currentGamepad2.options && !previousGamepad2.options) {
+                telemetry.addLine("SYNCING FOR 1 SECOND!!!");
+                telemetry.update();
+                // THIS WILL BLOCK FOR 1 SECOND!!!!
+                slidesAndRotate.Sync();
+                // restart loop because inputs are outdated. Also do a new bulk read.
+                for (LynxModule hub : allHubs) {
+                    hub.clearBulkCache();
+                }
+                continue;
+            }
+
             // change presets if needed
             if (currentGamepad1.left_trigger!=0 || currentGamepad1.right_trigger!=0 || currentGamepad1.dpad_up || currentGamepad1.dpad_down ||
                     currentGamepad2.left_trigger!=0 || currentGamepad2.right_trigger!=0 || currentGamepad2.dpad_up || currentGamepad2.dpad_down){
@@ -90,7 +103,7 @@ public class TeleopMain extends LinearOpMode {
                 slidesAndRotate.MoveSlide(currentPreset);
             }
 
-            // Do the drivetrain. Left bumper is slow mode, right bumper is reverse the robot.
+            // Do the drivetrain. Left bumper is slow mode, right bumper is reverse the robot (does it work?).
             // REMEMBER Y STICK IS REVERSED
             driveTrain.Drive(
                     currentGamepad1.right_bumper ?  currentGamepad1.right_stick_x  * (currentGamepad1.right_bumper ? 1 : 1)  :  currentGamepad1.left_stick_x  * (currentGamepad1.right_bumper ? 1 : 1),

@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-
-
 import static android.os.SystemClock.sleep;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -360,10 +358,16 @@ public class SlidesAndRotate {
     public void Sync() {
         slide.setTargetPosition(slide2.getCurrentPosition());
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slide.setPower(0.3);
+        slide.setPower(0.4);
+        slide2.setTargetPosition(slide2.getCurrentPosition());
+        slide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slide2.setPower(0.4);
         slideRotate.setTargetPosition(slideRotate2.getCurrentPosition());
         slideRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideRotate.setPower(0.3);
+        slideRotate2.setTargetPosition(slideRotate2.getCurrentPosition());
+        slideRotate2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideRotate2.setPower(0.3);
         sleep(1000);
     }
 }
