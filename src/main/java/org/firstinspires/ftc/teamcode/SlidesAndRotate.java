@@ -44,7 +44,7 @@ public class SlidesAndRotate {
         // slideRotate encoder value for the preset
         public final int slideRotateEncoder;
 
-        public enum entryType {
+        private enum entryType {
             real, encoder
         }
 

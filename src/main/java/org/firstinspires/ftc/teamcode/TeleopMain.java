@@ -15,12 +15,15 @@ public class TeleopMain extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        // init slides and rotate
         SlidesAndRotate slidesAndRotate = new SlidesAndRotate(true, true);
         slidesAndRotate.initSlide(hardwareMap.get(DcMotor.class, "slide"),
                 hardwareMap.get(DcMotor.class, "slide2"));
         slidesAndRotate.initRotate(hardwareMap.get(DcMotor.class, "slideRotate"),
                 hardwareMap.get(DcMotor.class, "slideRotate2"));
+        SlidesAndRotate.Presets currentPreset = null;
 
+        // init drivetrain
         DriveTrain driveTrain = new DriveTrain();
         driveTrain.init(true,
                 hardwareMap.get(DcMotor.class, "backLeft"),
@@ -28,22 +31,26 @@ public class TeleopMain extends LinearOpMode {
                 hardwareMap.get(DcMotor.class, "frontLeft"),
                 hardwareMap.get(DcMotor.class, "frontRight"));
 
+        // init claw
         CustomServo claw = new CustomServo(0.71, 0.85);
         claw.init(hardwareMap.get(Servo.class, "claw"), CustomServo.Position.close);
 
-
+        // set manual sensor caching
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
+        // define gamepads
         Gamepad currentGamepad1 = new Gamepad();
         Gamepad currentGamepad2 = new Gamepad();
-
         Gamepad previousGamepad1 = new Gamepad();
         Gamepad previousGamepad2 = new Gamepad();
+
+        // set telemetry to update the driver station 10 times per second
         telemetry.setMsTransmissionInterval(100);
 
+        // Ready!
         telemetry.addLine("Ready to play, everything initialized.");
         telemetry.update();
         waitForStart();
@@ -62,8 +69,26 @@ public class TeleopMain extends LinearOpMode {
             currentGamepad1.copy(gamepad1);
             currentGamepad2.copy(gamepad2);
 
-            slidesAndRotate.Rotate(currentGamepad1.left_trigger - currentGamepad1.right_trigger + currentGamepad2.left_trigger - currentGamepad2.right_trigger);
-            slidesAndRotate.MoveSlide((currentGamepad1.dpad_up || currentGamepad2.dpad_up) ? 0.8 : 0 + ((currentGamepad1.dpad_down || currentGamepad2.dpad_down) ? -0.8 : 0));
+            // change presets if needed
+            if (currentGamepad1.left_trigger!=0 || currentGamepad1.right_trigger!=0 || currentGamepad1.dpad_up || currentGamepad1.dpad_down ||
+                    currentGamepad2.left_trigger!=0 || currentGamepad2.right_trigger!=0 || currentGamepad2.dpad_up || currentGamepad2.dpad_down){
+                currentPreset = null;
+            } else if (currentGamepad1.a && !previousGamepad1.a || currentGamepad2.a && !previousGamepad2.a) {
+                currentPreset = SlidesAndRotate.Presets.WallPickup;
+            } else if (currentGamepad1.b && !previousGamepad1.b || currentGamepad2.b && !previousGamepad2.b) {
+                currentPreset = SlidesAndRotate.Presets.TopSpecimen;
+            } else if (currentGamepad1.guide && !previousGamepad1.guide || currentGamepad2.guide && !previousGamepad2.guide) {
+                currentPreset = SlidesAndRotate.Presets.Ascent;
+            }
+
+            // do slide rotation and extension
+            if (currentPreset == null) {
+                slidesAndRotate.Rotate(currentGamepad1.left_trigger - currentGamepad1.right_trigger + currentGamepad2.left_trigger - currentGamepad2.right_trigger);
+                slidesAndRotate.MoveSlide((currentGamepad1.dpad_up || currentGamepad2.dpad_up) ? 0.8 : 0 + ((currentGamepad1.dpad_down || currentGamepad2.dpad_down) ? -0.8 : 0));
+            } else {
+                slidesAndRotate.Rotate(currentPreset);
+                slidesAndRotate.MoveSlide(currentPreset);
+            }
 
             // Do the drivetrain. Left bumper is slow mode, right bumper is reverse the robot.
             // REMEMBER Y STICK IS REVERSED
