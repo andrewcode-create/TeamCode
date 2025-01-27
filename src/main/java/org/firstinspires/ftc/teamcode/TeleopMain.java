@@ -60,6 +60,11 @@ public class TeleopMain extends LinearOpMode {
             long TimeElapsed = System.currentTimeMillis() - LastFrameTime;
             LastFrameTime = System.currentTimeMillis();
 
+            // do bulk read for performance improvement
+            for (LynxModule hub : allHubs) {
+                hub.clearBulkCache();
+            }
+
             // Store the gamepad values from the previous loop iteration in previous gamepad1/2 to be used in this loop iteration.
             previousGamepad1.copy(currentGamepad1);
             previousGamepad2.copy(currentGamepad2);
@@ -75,10 +80,7 @@ public class TeleopMain extends LinearOpMode {
                 telemetry.update();
                 // THIS WILL BLOCK FOR 1 SECOND!!!!
                 slidesAndRotate.Sync();
-                // restart loop because inputs are outdated. Also do a new bulk read.
-                for (LynxModule hub : allHubs) {
-                    hub.clearBulkCache();
-                }
+                // restart loop because inputs are outdated.
                 continue;
             }
 
@@ -131,10 +133,7 @@ public class TeleopMain extends LinearOpMode {
             telemetry.addData("Rotate state", slidesAndRotate.getStateRotate());
             telemetry.update();
 
-            // do bulk read for performance improvement
-            for (LynxModule hub : allHubs) {
-                hub.clearBulkCache();
-            }
+
         }
     }
 
