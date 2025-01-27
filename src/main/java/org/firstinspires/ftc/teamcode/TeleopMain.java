@@ -31,9 +31,12 @@ public class TeleopMain extends LinearOpMode {
 
         long LastFrameTime = System.currentTimeMillis();
         while (opModeIsActive()) {
+            long TimeElapsed = System.currentTimeMillis() - LastFrameTime;
+            LastFrameTime = System.currentTimeMillis();
             slidesAndRotate.Rotate(gamepad1.left_trigger - gamepad1.right_trigger + gamepad2.left_trigger - gamepad2.right_trigger);
             slidesAndRotate.MoveSlide((gamepad1.dpad_up || gamepad2.dpad_up) ? 0.8 : 0 + ((gamepad1.dpad_down || gamepad2.dpad_down) ? -0.8 : 0));
             // Do the drivetrain. Left bumper is slow mode, right bumper is reverse the robot.
+            // REMEMBER Y STICK IS REVERSED
             driveTrain.Drive(
                     gamepad1.right_bumper ?  gamepad1.right_stick_x  * (gamepad1.right_bumper ? 1 : 1)  :  gamepad1.left_stick_x  * (gamepad1.right_bumper ? 1 : 1),
                     gamepad1.right_bumper ? -gamepad1.right_stick_y  * (gamepad1.right_bumper ? -1 : 1) : -gamepad1.left_stick_y  * (gamepad1.right_bumper ? -1 : 1),
@@ -41,8 +44,12 @@ public class TeleopMain extends LinearOpMode {
                     gamepad1.right_bumper ? -gamepad1.left_stick_y   * (gamepad1.right_bumper ? -1 : 1) : -gamepad1.right_stick_y * (gamepad1.right_bumper ? -1 : 1),
                     gamepad1.left_bumper ? 0.5 : 1);
 
-            double TimeElapsed = System.currentTimeMillis() - LastFrameTime;
-            LastFrameTime = System.currentTimeMillis();
+
+
+
+
+            // do telemetry and update frame time
+
             telemetry.addData("MS update Time", TimeElapsed);
             telemetry.addData("SlideRotate angle", slidesAndRotate.getAngle());
             telemetry.addData("Remaining Slide Distance", slidesAndRotate.GetRemainingSlideDistance());
