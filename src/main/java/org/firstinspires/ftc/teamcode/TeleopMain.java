@@ -5,6 +5,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.List;
@@ -37,6 +38,12 @@ public class TeleopMain extends LinearOpMode {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
+        Gamepad currentGamepad1 = new Gamepad();
+        Gamepad currentGamepad2 = new Gamepad();
+
+        Gamepad previousGamepad1 = new Gamepad();
+        Gamepad previousGamepad2 = new Gamepad();
+
         waitForStart();
 
         long LastFrameTime = System.currentTimeMillis();
@@ -44,17 +51,26 @@ public class TeleopMain extends LinearOpMode {
             long TimeElapsed = System.currentTimeMillis() - LastFrameTime;
             LastFrameTime = System.currentTimeMillis();
 
-            slidesAndRotate.Rotate(gamepad1.left_trigger - gamepad1.right_trigger + gamepad2.left_trigger - gamepad2.right_trigger);
-            slidesAndRotate.MoveSlide((gamepad1.dpad_up || gamepad2.dpad_up) ? 0.8 : 0 + ((gamepad1.dpad_down || gamepad2.dpad_down) ? -0.8 : 0));
+            // Store the gamepad values from the previous loop iteration in previous gamepad1/2 to be used in this loop iteration.
+            previousGamepad1.copy(currentGamepad1);
+            previousGamepad2.copy(currentGamepad2);
+
+            // Store the gamepad values from this loop iteration in currentGamepad1/2 to be used for the entirety of this loop iteration.
+            // This prevents the gamepad values from changing between being used in the same loop iteration.
+            currentGamepad1.copy(gamepad1);
+            currentGamepad2.copy(gamepad2);
+
+            slidesAndRotate.Rotate(currentGamepad1.left_trigger - currentGamepad1.right_trigger + currentGamepad2.left_trigger - currentGamepad2.right_trigger);
+            slidesAndRotate.MoveSlide((currentGamepad1.dpad_up || currentGamepad2.dpad_up) ? 0.8 : 0 + ((currentGamepad1.dpad_down || currentGamepad2.dpad_down) ? -0.8 : 0));
 
             // Do the drivetrain. Left bumper is slow mode, right bumper is reverse the robot.
             // REMEMBER Y STICK IS REVERSED
             driveTrain.Drive(
-                    gamepad1.right_bumper ?  gamepad1.right_stick_x  * (gamepad1.right_bumper ? 1 : 1)  :  gamepad1.left_stick_x  * (gamepad1.right_bumper ? 1 : 1),
-                    gamepad1.right_bumper ? -gamepad1.right_stick_y  * (gamepad1.right_bumper ? -1 : 1) : -gamepad1.left_stick_y  * (gamepad1.right_bumper ? -1 : 1),
-                    gamepad1.right_bumper ?  gamepad1.left_stick_x   * (gamepad1.right_bumper ? 1 : 1)  :  gamepad1.right_stick_x * (gamepad1.right_bumper ? 1 : 1),
-                    gamepad1.right_bumper ? -gamepad1.left_stick_y   * (gamepad1.right_bumper ? -1 : 1) : -gamepad1.right_stick_y * (gamepad1.right_bumper ? -1 : 1),
-                    gamepad1.left_bumper ? 0.5 : 1);
+                    currentGamepad1.right_bumper ?  currentGamepad1.right_stick_x  * (currentGamepad1.right_bumper ? 1 : 1)  :  currentGamepad1.left_stick_x  * (currentGamepad1.right_bumper ? 1 : 1),
+                    currentGamepad1.right_bumper ? -currentGamepad1.right_stick_y  * (currentGamepad1.right_bumper ? -1 : 1) : -currentGamepad1.left_stick_y  * (currentGamepad1.right_bumper ? -1 : 1),
+                    currentGamepad1.right_bumper ?  currentGamepad1.left_stick_x   * (currentGamepad1.right_bumper ? 1 : 1)  :  currentGamepad1.right_stick_x * (currentGamepad1.right_bumper ? 1 : 1),
+                    currentGamepad1.right_bumper ? -currentGamepad1.left_stick_y   * (currentGamepad1.right_bumper ? -1 : 1) : -currentGamepad1.right_stick_y * (currentGamepad1.right_bumper ? -1 : 1),
+                    currentGamepad1.left_bumper ? 0.5 : 1);
 
 
 
