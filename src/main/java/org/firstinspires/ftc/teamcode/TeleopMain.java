@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "TeleopMain")
 public class TeleopMain extends LinearOpMode {
@@ -22,6 +23,9 @@ public class TeleopMain extends LinearOpMode {
                 hardwareMap.get(DcMotor.class, "backRight"),
                 hardwareMap.get(DcMotor.class, "frontLeft"),
                 hardwareMap.get(DcMotor.class, "frontRight"));
+
+        CustomServo claw = new CustomServo(0, 1);
+        claw.init(hardwareMap.get(Servo.class, "claw"), CustomServo.Position.close);
 
         waitForStart();
 

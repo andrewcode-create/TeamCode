@@ -33,6 +33,7 @@ public class CustomServo {
 
     public void init(Servo servo, Position startingPosition) {
         this.servo = servo;
+        moveToPos(startingPosition);
     }
 
     public void moveToPos(Position newPos) {
