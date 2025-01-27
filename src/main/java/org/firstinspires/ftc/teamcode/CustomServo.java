@@ -13,6 +13,7 @@ public class CustomServo {
     private final double midPos;
     private boolean isDisabled = false;
     private Position pos;
+    public Position getPosition() {return pos;}
 
     public CustomServo(double open, double close, double mid, double change) {
         openPos = open;
@@ -45,6 +46,7 @@ public class CustomServo {
     public void disableServo() {
         servo.getController().pwmDisable();
         isDisabled = true;
+        pos = Position.none;
     }
 
     public void moveToPos(Position newPos) {

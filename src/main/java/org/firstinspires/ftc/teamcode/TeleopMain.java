@@ -43,7 +43,10 @@ public class TeleopMain extends LinearOpMode {
 
         Gamepad previousGamepad1 = new Gamepad();
         Gamepad previousGamepad2 = new Gamepad();
+        telemetry.setMsTransmissionInterval(100);
 
+        telemetry.addLine("Ready to play, everything initialized.");
+        telemetry.update();
         waitForStart();
 
         long LastFrameTime = System.currentTimeMillis();
@@ -73,7 +76,12 @@ public class TeleopMain extends LinearOpMode {
                     currentGamepad1.left_bumper ? 0.5 : 1);
 
 
-
+            // claw
+            if (currentGamepad1.y && !previousGamepad1.y && claw.getPosition() != CustomServo.Position.close) {
+                claw.moveToPos(CustomServo.Position.close);
+            } else if (currentGamepad1.y && !previousGamepad1.y && claw.getPosition() != CustomServo.Position.open) {
+                claw.moveToPos(CustomServo.Position.open);
+            }
 
 
             // do telemetry
