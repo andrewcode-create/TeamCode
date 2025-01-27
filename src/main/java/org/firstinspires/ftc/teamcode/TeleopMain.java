@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import java.util.List;
 
 @TeleOp(name = "TeleopMain")
 public class TeleopMain extends LinearOpMode {
@@ -27,14 +30,23 @@ public class TeleopMain extends LinearOpMode {
         CustomServo claw = new CustomServo(0, 1);
         claw.init(hardwareMap.get(Servo.class, "claw"), CustomServo.Position.close);
 
+
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         waitForStart();
 
         long LastFrameTime = System.currentTimeMillis();
         while (opModeIsActive()) {
             long TimeElapsed = System.currentTimeMillis() - LastFrameTime;
             LastFrameTime = System.currentTimeMillis();
+
             slidesAndRotate.Rotate(gamepad1.left_trigger - gamepad1.right_trigger + gamepad2.left_trigger - gamepad2.right_trigger);
             slidesAndRotate.MoveSlide((gamepad1.dpad_up || gamepad2.dpad_up) ? 0.8 : 0 + ((gamepad1.dpad_down || gamepad2.dpad_down) ? -0.8 : 0));
+
             // Do the drivetrain. Left bumper is slow mode, right bumper is reverse the robot.
             // REMEMBER Y STICK IS REVERSED
             driveTrain.Drive(
@@ -48,8 +60,7 @@ public class TeleopMain extends LinearOpMode {
 
 
 
-            // do telemetry and update frame time
-
+            // do telemetry
             telemetry.addData("MS update Time", TimeElapsed);
             telemetry.addData("SlideRotate angle", slidesAndRotate.getAngle());
             telemetry.addData("Remaining Slide Distance", slidesAndRotate.GetRemainingSlideDistance());
@@ -58,6 +69,11 @@ public class TeleopMain extends LinearOpMode {
             telemetry.addData("Slide state", slidesAndRotate.getStateSlide());
             telemetry.addData("Rotate state", slidesAndRotate.getStateRotate());
             telemetry.update();
+
+            // do bulk read for performance improvement
+            for (LynxModule hub : allHubs) {
+                hub.clearBulkCache();
+            }
         }
     }
 
