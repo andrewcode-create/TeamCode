@@ -28,12 +28,11 @@ public class TeleopMain extends LinearOpMode {
                 hardwareMap.get(DcMotor.class, "frontLeft"),
                 hardwareMap.get(DcMotor.class, "frontRight"));
 
-        CustomServo claw = new CustomServo(0, 1);
+        CustomServo claw = new CustomServo(0.71, 0.85);
         claw.init(hardwareMap.get(Servo.class, "claw"), CustomServo.Position.close);
 
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
-
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
