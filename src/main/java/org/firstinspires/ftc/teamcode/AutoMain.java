@@ -20,7 +20,7 @@ public class AutoMain extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        actions.add(new Action(new Pose2D(DistanceUnit.MM,1000, 0, HeadingUnit.RAIDIANS, )));
+        actions.add(new Action(new Pose2D(DistanceUnit.MM,1000, 0, AngleUnit.RADIANS, Math.PI), SlidesAndRotate.Presets.WallPickup));
 
         // init slides and rotate
         SlidesAndRotate slidesAndRotate = new SlidesAndRotate(true, true);
