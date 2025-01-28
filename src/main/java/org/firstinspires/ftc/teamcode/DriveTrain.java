@@ -54,15 +54,18 @@ public class DriveTrain {
     }
 
     // go to angle of turnX and turnY from current angle
-    public void DriveFieldCentric(double driveX, double driveY, double toAngle, double botHeading) {
+    public void DriveFieldCentric(double driveX, double driveY, double toAngle, double botHeading, double speed) {
         // rotate the drive constants
         double X = driveX * Math.cos(-botHeading) - driveY * Math.sin(-botHeading);
         double Y = driveX * Math.sin(-botHeading) + driveY * Math.cos(-botHeading);
 
         X = X * 1.07;  // Counteract imperfect strafing
 
+        
+        int rDirection = toAngle > botHeading ? -1 : 1;
+
         // get desired rotation speed and clamp it to [-1,1]
-        double r = transformRotation(toAngle - botHeading);
+        double r = Math.abs(transformRotation(toAngle - botHeading))*rDirection;
 
         double fl = Y + X + r;
         double bl = Y - X + r;
@@ -70,7 +73,7 @@ public class DriveTrain {
         double br = Y + X - r;
 
         // scale everything to [-1,1]
-        double denominator = Math.max(Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br))), 1);
+        double denominator = (1/speed)*(Math.max(Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br))), 1));
 
         fl /= denominator;
         bl /= denominator;
