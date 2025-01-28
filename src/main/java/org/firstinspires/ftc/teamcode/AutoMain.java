@@ -9,14 +9,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class AutoMain extends LinearOpMode {
+    ArrayList<Action> actions = new ArrayList<Action>(10);
 
     @Override
     public void runOpMode() {
+        actions.add(new Action(new Pose2D(DistanceUnit.MM,1000, 0, HeadingUnit.RAIDIANS, )));
+
         // init slides and rotate
         SlidesAndRotate slidesAndRotate = new SlidesAndRotate(true, true);
         slidesAndRotate.initSlide(hardwareMap.get(DcMotor.class, "slideLeft"),

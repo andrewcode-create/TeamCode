@@ -2,6 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+
 public class DriveTrain {
     private DcMotor backLeft;
     private DcMotor backRight;
@@ -58,6 +62,13 @@ public class DriveTrain {
         final double modifier = 0.1;
         // see https://www.desmos.com/calculator/ujxklm6xd1
         return (2.0/(1+Math.pow(Math.E, -diff*modifier))-1);
+    }
+
+    public void DriveToPoint(Pose2D to, Pose2D bot, double speed) {
+        double driveX = transformDrive(Math.abs(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM)));
+        double driveY = transformDrive(Math.abs(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM)));
+
+        DriveFieldCentric(driveX, driveY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed);
     }
 
     public void DriveToPoint(double toX, double toY, double toAngle, double botHeading, double botX, double botY, double speed) {
