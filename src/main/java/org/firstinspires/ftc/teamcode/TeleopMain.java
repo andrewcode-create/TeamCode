@@ -17,10 +17,10 @@ public class TeleopMain extends LinearOpMode {
     public void runOpMode() {
         // init slides and rotate
         SlidesAndRotate slidesAndRotate = new SlidesAndRotate(true, true);
-        slidesAndRotate.initSlide(hardwareMap.get(DcMotor.class, "slide"),
-                hardwareMap.get(DcMotor.class, "slide2"));
-        slidesAndRotate.initRotate(hardwareMap.get(DcMotor.class, "slideRotate"),
-                hardwareMap.get(DcMotor.class, "slideRotate2"));
+        slidesAndRotate.initSlide(hardwareMap.get(DcMotor.class, "slideLeft"),
+                hardwareMap.get(DcMotor.class, "slideRight"));
+        slidesAndRotate.initRotate(hardwareMap.get(DcMotor.class, "slideRotateLeft"),
+                hardwareMap.get(DcMotor.class, "slideRotateRight"));
         SlidesAndRotate.Presets currentPreset = null;
 
         // init drivetrain
@@ -41,7 +41,7 @@ public class TeleopMain extends LinearOpMode {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
-        // define gamepads
+        // define gamepad 1 and 2
         Gamepad currentGamepad1 = new Gamepad();
         Gamepad currentGamepad2 = new Gamepad();
         Gamepad previousGamepad1 = new Gamepad();
