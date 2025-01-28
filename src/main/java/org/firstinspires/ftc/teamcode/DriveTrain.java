@@ -46,6 +46,13 @@ public class DriveTrain {
         return Math.max(min, Math.min(max, value));
     }
 
+    // returns a clamped value for turn speed in [-1,1], given an angle difference
+    private double transformRotation(double diff) {
+        final double modifier = 5;
+        // see https://www.desmos.com/calculator/ujxklm6xd1
+        return (2.0/(1+Math.pow(Math.E, -diff*modifier))-1);
+    }
+
     // go to angle of turnX and turnY from current angle
     public void DriveFieldCentric(double driveX, double driveY, double toAngle, double botHeading) {
         // rotate the drive constants
@@ -54,13 +61,15 @@ public class DriveTrain {
 
         X = X * 1.07;  // Counteract imperfect strafing
 
-        double r = clamp(toAngle - botHeading, -1, 1);
+        // get desired rotation speed and clamp it to [-1,1]
+        double r = transformRotation(toAngle - botHeading);
 
         double fl = Y + X + r;
         double bl = Y - X + r;
         double fr = Y - X - r;
         double br = Y + X - r;
 
+        // scale everything to [-1,1]
         double denominator = Math.max(Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br))), 1);
 
         fl /= denominator;
