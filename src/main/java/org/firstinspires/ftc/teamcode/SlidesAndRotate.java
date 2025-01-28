@@ -132,6 +132,9 @@ public class SlidesAndRotate {
         // check if encoders don't match, with buffer
         if (Math.abs(slideRotate.getCurrentPosition() - slideRotate2.getCurrentPosition()) > RotateBuffer) {
             stateRotate = State.Broken;
+        } else if (stateRotate == State.Broken) {
+            // state is broken, but within limits
+            stateRotate = State.Preset;
         }
 
         // stop rotate motors if broken
@@ -310,6 +313,9 @@ public class SlidesAndRotate {
         // check if encoders don't match, with buffer
         if (Math.abs(slide.getCurrentPosition() - slide2.getCurrentPosition()) > SlideBuffer) {
             stateSlide = State.Broken;
+        } else if (stateSlide == State.Broken) {
+            // state is broken, but within limits
+            stateSlide = State.Preset;
         }
 
         // stop slide motors if broken
