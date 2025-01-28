@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class DriveTrain {
@@ -41,6 +40,38 @@ public class DriveTrain {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    private double clamp(double value, double min, double max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
+    // go to angle of turnX and turnY from current angle
+    public void DriveFieldCentric(double driveX, double driveY, double toAngle, double botHeading) {
+        // rotate the drive constants
+        double X = driveX * Math.cos(-botHeading) - driveY * Math.sin(-botHeading);
+        double Y = driveX * Math.sin(-botHeading) + driveY * Math.cos(-botHeading);
+
+        X = X * 1.07;  // Counteract imperfect strafing
+
+        double r = clamp(toAngle - botHeading, -1, 1);
+
+        double fl = Y + X + r;
+        double bl = Y - X + r;
+        double fr = Y - X - r;
+        double br = Y + X - r;
+
+        double denominator = Math.max(Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br))), 1);
+
+        fl /= denominator;
+        bl /= denominator;
+        fr /= denominator;
+        br /= denominator;
+
+        backRight.setPower(br);
+        frontRight.setPower(fr);
+        backLeft.setPower(bl);
+        frontLeft.setPower(fl);
     }
 
     public void Drive(double x1, double y1, double x2, double y2, double speed) {
