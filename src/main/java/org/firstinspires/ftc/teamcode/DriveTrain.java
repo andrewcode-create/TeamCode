@@ -48,9 +48,23 @@ public class DriveTrain {
 
     // returns a clamped value for turn speed in [-1,1], given an angle difference
     private double transformRotation(double diff) {
-        final double modifier = 5;
+        final double modifier = 4;
         // see https://www.desmos.com/calculator/ujxklm6xd1
         return (2.0/(1+Math.pow(Math.E, -diff*modifier))-1);
+    }
+
+    // takes in mm
+    private double transformDrive(double diff) {
+        final double modifier = 0.1;
+        // see https://www.desmos.com/calculator/ujxklm6xd1
+        return (2.0/(1+Math.pow(Math.E, -diff*modifier))-1);
+    }
+
+    public void DriveToPoint(double toX, double toY, double toAngle, double botHeading, double botX, double botY, double speed) {
+        double driveX = transformDrive(Math.abs(toX - botX));
+        double driveY = transformDrive(Math.abs(toY - botY));
+
+        DriveFieldCentric(driveX, driveY, toAngle, botHeading, speed);
     }
 
     // go to angle of turnX and turnY from current angle
@@ -61,11 +75,11 @@ public class DriveTrain {
 
         X = X * 1.07;  // Counteract imperfect strafing
 
-        
+
         int rDirection = toAngle > botHeading ? -1 : 1;
 
         // get desired rotation speed and clamp it to [-1,1]
-        double r = Math.abs(transformRotation(toAngle - botHeading))*rDirection;
+        double r = rDirection * Math.abs(transformRotation(toAngle - botHeading));
 
         double fl = Y + X + r;
         double bl = Y - X + r;
