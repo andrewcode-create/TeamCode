@@ -76,6 +76,9 @@ public class TeleopMain extends LinearOpMode {
         odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
         odo.resetPosAndIMU();
+        telemetry.addLine("Waiting for odometer");
+        telemetry.update();
+        sleep(500);
 
 
         // Ready!
