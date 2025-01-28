@@ -1,26 +1,26 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+@Autonomous(name = "AutoMain")
 public class AutoMain extends LinearOpMode {
     ArrayList<Action> actions = new ArrayList<Action>(10);
 
     @Override
     public void runOpMode() {
-        actions.add(new Action(new Pose2D(DistanceUnit.MM,1000, 0, AngleUnit.RADIANS, Math.PI), SlidesAndRotate.Presets.WallPickup));
+        //actions.add(new Action(new Pose2D(DistanceUnit.MM,1000, 0, AngleUnit.RADIANS, Math.PI), SlidesAndRotate.Presets.WallPickup));
 
         // init slides and rotate
         SlidesAndRotate slidesAndRotate = new SlidesAndRotate(true, true);
