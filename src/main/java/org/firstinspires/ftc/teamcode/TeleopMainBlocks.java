@@ -11,6 +11,7 @@ import java.util.List;
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
 @TeleOp(name = "TeleopMain (Blocks to Java)")
+@Disabled
 public class TeleopMainBlocks extends LinearOpMode {
 
     private DcMotor backLeft;
