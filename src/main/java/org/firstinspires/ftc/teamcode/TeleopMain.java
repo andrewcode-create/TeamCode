@@ -72,7 +72,7 @@ public class TeleopMain extends LinearOpMode {
          */
         odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        odo.setOffsets(100, 100);
+        odo.setOffsets(Constants.pinpointRotX, Constants.pinpointRotY);
 
 
 
@@ -80,7 +80,8 @@ public class TeleopMain extends LinearOpMode {
         telemetry.addLine("Waiting for odometer");
         telemetry.update();
         sleep(500);
-        odo.setPosition(new Pose2D(DistanceUnit.MM, 0, 1000, AngleUnit.RADIANS, 0));
+        // set position to starting teleop position and heading
+        odo.setPosition(new Pose2D(DistanceUnit.MM, Constants.startingPosTeleop.getX(DistanceUnit.MM), Constants.startingPosTeleop.getY(DistanceUnit.MM), AngleUnit.RADIANS, Constants.startingPosTeleop.getHeading(AngleUnit.RADIANS)));
         sleep(20);
 
 
@@ -206,7 +207,7 @@ public class TeleopMain extends LinearOpMode {
                 }
             }
             */
-             */
+
             //double r = (currentGamepad1.right_stick_x > 0 ? -1 : 1)*(Math.PI*0.5 + Math.atan(-currentGamepad1.right_stick_y / (currentGamepad1.right_stick_x == 0 ? 0.001 : currentGamepad1.right_stick_x)));
             driveTrain.DriveFieldCentric(X, Y, r, pos.getHeading(AngleUnit.RADIANS),1, telemetry);
 
@@ -224,7 +225,7 @@ public class TeleopMain extends LinearOpMode {
             telemetry.addData("SlideRotate angle", slidesAndRotate.getAngle());
             telemetry.addData("Remaining Slide Distance", slidesAndRotate.GetRemainingSlideDistance());
             telemetry.addLine("Slide Encoder Difference: " + Math.abs(slidesAndRotate.slide.getCurrentPosition() - slidesAndRotate.slide2.getCurrentPosition()) + ", with values " + slidesAndRotate.slide.getCurrentPosition() + " and " + slidesAndRotate.slide2.getCurrentPosition());
-            telemetry.addLine("Slide Encoder Difference: " + Math.abs(slidesAndRotate.slideRotate.getCurrentPosition() - slidesAndRotate.slideRotate2.getCurrentPosition()) + ", with values " + slidesAndRotate.slideRotate.getCurrentPosition() + " and " + slidesAndRotate.slideRotate2.getCurrentPosition());
+            telemetry.addLine("SlideRotate Encoder Difference: " + Math.abs(slidesAndRotate.slideRotate.getCurrentPosition() - slidesAndRotate.slideRotate2.getCurrentPosition()) + ", with values " + slidesAndRotate.slideRotate.getCurrentPosition() + " and " + slidesAndRotate.slideRotate2.getCurrentPosition());
             telemetry.addData("Slide state", slidesAndRotate.getStateSlide());
             telemetry.addData("Rotate state", slidesAndRotate.getStateRotate());
             telemetry.update();
