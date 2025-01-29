@@ -67,19 +67,34 @@ public class DriveTrain {
         return (2.0/(1+Math.pow(Math.E, -diff*modifier))-1);
     }
 
+    public static double getDistanceToPoint(Pose2D to, Pose2D bot) {
+        return Math.sqrt(
+                (to.getX(DistanceUnit.MM)-bot.getX(DistanceUnit.MM))*(to.getX(DistanceUnit.MM)-bot.getX(DistanceUnit.MM))
+                + (to.getY(DistanceUnit.MM)-bot.getY(DistanceUnit.MM))*(to.getY(DistanceUnit.MM)-bot.getY(DistanceUnit.MM))
+        );
+    }
+
     public void DriveToPoint(Pose2D to, Pose2D bot, double speed) {
-        double driveX = transformDrive(Math.abs(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM)));
-        double driveY = transformDrive(Math.abs(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM)));
+        double driveX = transformDrive(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
+        double driveY = transformDrive(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
+
+        DriveFieldCentric(driveX, driveY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
+    }
+    public void DriveToPointGoThrough(Pose2D to, Pose2D bot, double speed) {
+        double driveX = (to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
+        double driveY = (to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
 
         DriveFieldCentric(driveX, driveY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
     }
 
+    /*
     public void DriveToPoint(double toX, double toY, double toAngle, double botHeading, double botX, double botY, double speed) {
-        double driveX = transformDrive(Math.abs(toX - botX));
-        double driveY = transformDrive(Math.abs(toY - botY));
+        double driveX = transformDrive(toX - botX);
+        double driveY = transformDrive(toY - botY);
 
         DriveFieldCentric(driveX, driveY, toAngle, botHeading, speed, null);
     }
+    */
 
     // go to angle of turnX and turnY from current angle
     public void DriveFieldCentric(double driveX, double driveY, double toAngle, double botHeading, double speed, Telemetry telemetry) {

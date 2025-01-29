@@ -18,6 +18,40 @@ import java.util.Locale;
 
 @Autonomous(name = "AutoMain")
 public class AutoMain extends LinearOpMode {
+
+    enum state2 {
+        start,
+
+        bar,
+        goBarGround,
+        goGround,
+        ground,
+        specimenPickup,
+
+        done,
+
+        lowerSlide,
+        openClaw,
+        closeClaw,
+    }
+
+    enum state {
+        start,
+        bar1, goBarGround1, goGround1, ground1,
+        specimenPickup2, bar2, goBarGround2, goGround2, ground2,
+        getSpecimenPickup3, bar3, goBarGround3, goGround3, ground3,
+        getSpecimenPickup4, bar4,
+        getSpecimenPickup5, bar5,
+        done,
+
+        lowerSlide,
+        openClaw,
+        closeClaw,
+
+        broken,
+    }
+
+
     @Override
     public void runOpMode() {
         // init slides and rotate
@@ -93,6 +127,14 @@ public class AutoMain extends LinearOpMode {
         waitForStart();
 
         long LastFrameTime = System.currentTimeMillis();
+        long currentStateStartTime = System.currentTimeMillis();
+
+        state2 currentState = state2.start;
+        state2 previousState = state2.start;
+
+        int hungSpecimenNumber = 0;
+        int groundSpecimensTaken = 0;
+
         while (opModeIsActive()) {
             long TimeElapsed = System.currentTimeMillis() - LastFrameTime;
             LastFrameTime = System.currentTimeMillis();
@@ -108,6 +150,185 @@ public class AutoMain extends LinearOpMode {
             Pose2D pos = odo.getPosition();
             String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
             telemetry.addData("Position", data);
+
+            Pose2D vel = odo.getVelocity();
+
+            boolean isStopped = vel.getX(DistanceUnit.MM) < 1 && vel.getY(DistanceUnit.MM) < 1 && vel.getHeading(AngleUnit.DEGREES) < 2;
+
+            long currentStateTimeElapsed = System.currentTimeMillis() - currentStateStartTime;
+
+            switch (currentState) {
+                case start:
+                    previousState = currentState;
+                    currentState = state2.bar;
+                    currentStateStartTime = System.currentTimeMillis();
+                    break;
+                case bar:
+                    Pose2D goTo;
+                    if (hungSpecimenNumber == 0) goTo = Constants.Drop1;
+                    else if (hungSpecimenNumber == 1) goTo = Constants.Drop2;
+                    else if (hungSpecimenNumber == 2) goTo = Constants.Drop3;
+                    else if (hungSpecimenNumber == 3) goTo = Constants.Drop4;
+                    else goTo = Constants.Drop5; // hungSpecimenNumber == 4
+                    driveTrain.DriveToPoint(goTo, pos, 1);
+                    if (currentStateTimeElapsed > 300) {
+                        slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.TopSpecimen);
+                    }
+                    if (isStopped) {
+                        previousState = currentState;
+                        currentState = state2.lowerSlide;
+                        currentStateStartTime = System.currentTimeMillis();
+                    }
+                    break;
+                case lowerSlide:
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.DropTopSpecimen);
+                    if (currentStateTimeElapsed > 500) {
+                        previousState = currentState;
+                        currentState = state2.openClaw;
+                        currentStateStartTime = System.currentTimeMillis();
+                    }
+                    break;
+                case openClaw:
+                    claw.moveToPos(CustomServo.Position.open);
+                    if (currentStateTimeElapsed > 500) {
+                        previousState = currentState;
+                        currentStateStartTime = System.currentTimeMillis();
+                        hungSpecimenNumber++;
+                        if (groundSpecimensTaken < 3) {
+                            currentState = state2.goBarGround;
+                        } else if (hungSpecimenNumber < 5){
+                            currentState = state2.specimenPickup;
+                        } else {
+                            currentState = state2.done;
+                        }
+                    }
+                    break;
+                case goBarGround:
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
+                    driveTrain.DriveToPointGoThrough(Constants.goBarGround, pos, 1);
+                    if (DriveTrain.getDistanceToPoint(pos,Constants.goBarGround) < 20) {
+                        previousState = currentState;
+                        currentStateStartTime = System.currentTimeMillis();
+                        currentState = state2.goGround;
+                    }
+                    break;
+                case specimenPickup:
+                    driveTrain.DriveToPoint(Constants.pickUpSpecimen, pos, 1);
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
+                    if (isStopped) {
+                        previousState = currentState;
+                        currentStateStartTime = System.currentTimeMillis();
+                        currentState = state2.closeClaw;
+                    }
+                    break;
+                case goGround:
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
+                    if (groundSpecimensTaken == 0) {
+                        driveTrain.DriveToPoint(Constants.goGround1, pos, 1);
+                    } else if (groundSpecimensTaken == 1) {
+                        driveTrain.DriveToPoint(Constants.goGround2, pos, 1);
+                    } else if (groundSpecimensTaken == 2) {
+                        driveTrain.DriveToPoint(Constants.goGround3, pos, 1);
+                    }
+                    if (isStopped) {
+                        previousState = currentState;
+                        currentStateStartTime = System.currentTimeMillis();
+                        currentState = state2.ground;
+                    }
+                    break;
+                case closeClaw:
+                    claw.moveToPos(CustomServo.Position.close);
+                    if (currentStateTimeElapsed > 500) {
+                        previousState = currentState;
+                        currentStateStartTime = System.currentTimeMillis();
+                        currentState = state2.specimenPickup;
+                    }
+                    break;
+                case done:
+                    driveTrain.DriveToPoint(Constants.pickUpSpecimen, pos, 1);
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
+                    break;
+                case ground:
+                    Pose2D point = null;
+                    if (groundSpecimensTaken == 0) {
+                        driveTrain.DriveToPointGoThrough(Constants.ground1, pos, 1);
+                        point = Constants.ground1;
+                    } else if (groundSpecimensTaken == 1) {
+                        driveTrain.DriveToPointGoThrough(Constants.ground2, pos, 1);
+                        point = Constants.ground2;
+                    } else if (groundSpecimensTaken == 2) {
+                        driveTrain.DriveToPointGoThrough(Constants.ground3, pos, 1);
+                        point = Constants.ground2;
+                    }
+                    if (DriveTrain.getDistanceToPoint(point, pos) < 20) {
+                        groundSpecimensTaken++;
+                        previousState = currentState;
+                        currentStateStartTime = System.currentTimeMillis();
+                        currentState = state2.specimenPickup;
+                    }
+                    break;
+            }
+
+            /*
+            switch (currentState) {
+                case start:
+                    previousState = currentState;
+                    currentState = state.bar1;
+                    currentStateStartTime = System.currentTimeMillis();
+                    break;
+                case lowerSlide:
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.DropTopSpecimen);
+                    if (currentStateTimeElapsed > 500) {
+                        previousState = currentState;
+                        currentState = state.openClaw;
+                        currentStateStartTime = System.currentTimeMillis();
+                        specimenNumber++;
+                    }
+                    break;
+                case openClaw:
+                    claw.moveToPos(CustomServo.Position.open);
+                    if (currentStateTimeElapsed > 500) {
+                        previousState = currentState;
+                        currentStateStartTime = System.currentTimeMillis();
+                        switch(specimenNumber) {
+                            case 2:
+                                currentState = state.goBarGround1;
+                                break;
+                            case 3:
+                                currentState = state.goBarGround2;
+                                break;
+                            case 4:
+                                currentState = state.goBarGround3;
+                                break;
+                            case 5:
+                                currentState = state.getSpecimenPickup4;
+                                break;
+                            case 6:
+                                currentState = state.getSpecimenPickup5;
+                                break;
+                            case 7:
+                                currentState = state.done;
+                                break;
+                            default:
+                                currentState = state.broken;
+                        }
+                    }
+                    break;
+                case bar1:
+                    driveTrain.DriveToPoint(Constants.Drop1, pos, 1);
+                    if (currentStateTimeElapsed > 300) {
+                        slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.TopSpecimen);
+                    }
+                    if (isStopped)  {
+                        previousState = currentState;
+                        currentState = state.lowerSlide;
+                        currentStateStartTime = System.currentTimeMillis();
+                    }
+                    break;
+            }
+            */
+
+
 
             /*
             // Store the gamepad values from the previous loop iteration in previous gamepad1/2 to be used in this loop iteration.
@@ -224,6 +445,8 @@ public class AutoMain extends LinearOpMode {
             telemetry.addLine("SlideRotate Encoder Difference: " + Math.abs(slidesAndRotate.slideRotate.getCurrentPosition() - slidesAndRotate.slideRotate2.getCurrentPosition()) + ", with values " + slidesAndRotate.slideRotate.getCurrentPosition() + " and " + slidesAndRotate.slideRotate2.getCurrentPosition());
             telemetry.addData("Slide state", slidesAndRotate.getStateSlide());
             telemetry.addData("Rotate state", slidesAndRotate.getStateRotate());
+            telemetry.addLine();
+            telemetry.addLine("auto state: " + currentState.name() + ", previous state: " + previousState.name());
             telemetry.update();
 
 
