@@ -90,10 +90,15 @@ public class DriveTrain {
         X = X * 1.07;  // Counteract imperfect strafing
 
 
-        int rDirection = toAngle > botHeading ? -1 : 1;
+        //int rDirection = toAngle > botHeading ? -1 : 1;
 
         // get desired rotation speed and clamp it to [-1,1]
-        double r = rDirection * Math.abs(transformRotation(toAngle - botHeading));
+        // positive means turn left, negative means turn right
+        double diff = toAngle - botHeading;
+        while (diff > 180) diff -= 360;
+        while (diff <= -180) diff += 360;
+
+        double r = transformRotation(diff);
 
         double fl = Y + X + r;
         double bl = Y - X + r;

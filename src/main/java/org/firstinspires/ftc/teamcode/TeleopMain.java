@@ -65,20 +65,23 @@ public class TeleopMain extends LinearOpMode {
         the tracking point the Y (strafe) odometry pod is. forward of center is a positive number,
         backwards is a negative number.
          */
-        odo.setOffsets(0, 0);
-        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-
         /*
         Set the direction that each of the two odometry pods count. The X (forward) pod should
         increase when you move the robot forward. And the Y (strafe) pod should increase when
         you move the robot to the left.
          */
         odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        odo.setOffsets(100, 100);
+
+
 
         odo.resetPosAndIMU();
         telemetry.addLine("Waiting for odometer");
         telemetry.update();
         sleep(500);
+        odo.setPosition(new Pose2D(DistanceUnit.MM, 0, 1000, AngleUnit.RADIANS, 0));
+        sleep(20);
 
 
         // Ready!
@@ -158,6 +161,39 @@ public class TeleopMain extends LinearOpMode {
             double rX = currentGamepad1.right_stick_x;
             double rY = -currentGamepad1.right_stick_y;
             double r;
+            if (rX > 0) {
+                if (rY > 0) {
+                    // first quadrant, -pi/2 < r < 0
+                    r = -Math.atan(-rX/rY);
+                } else if (rY < 0) {
+                    // fourth quadrant, -pi < r < -pi/2
+                    r = -Math.PI/2 - Math.atan(rX/(-rY));
+                } else {
+                    // positive x axis
+                    r = -Math.PI/2;
+                }
+            } else if (rX < 0) {
+                if (rY > 0) {
+                    // second quadrant, 0 < r < pi/2
+                    r = Math.atan(rX/rY);
+                } else if (rY < 0) {
+                    // third quadrant, pi/2 < r < pi
+                    r = Math.PI/2 + Math.atan(rX/rY);
+                } else {
+                    // negative x axis
+                    r = Math.PI/2;
+                }
+            } else {
+                if (rY > 0) {
+                    // positive y axis
+                    r = 0;
+                } else {
+                    // negative y axis
+                    r = Math.PI;
+                }
+            }
+            /*
+            double r;
             if (rY < 0) {
                 r = Math.atan(rY/rX);
             } else if (rY > 0) {
@@ -169,6 +205,8 @@ public class TeleopMain extends LinearOpMode {
                     r = Math.PI;
                 }
             }
+            */
+             */
             //double r = (currentGamepad1.right_stick_x > 0 ? -1 : 1)*(Math.PI*0.5 + Math.atan(-currentGamepad1.right_stick_y / (currentGamepad1.right_stick_x == 0 ? 0.001 : currentGamepad1.right_stick_x)));
             driveTrain.DriveFieldCentric(X, Y, r, pos.getHeading(AngleUnit.RADIANS),1, telemetry);
 
