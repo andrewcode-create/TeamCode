@@ -155,8 +155,22 @@ public class TeleopMain extends LinearOpMode {
              */
             double X = currentGamepad1.left_stick_x;
             double Y = -currentGamepad1.left_stick_y;
-            double r = Math.tan(currentGamepad1.right_stick_y / currentGamepad1.right_stick_x);
-            driveTrain.DriveFieldCentric(X, Y, r, pos.getHeading(AngleUnit.RADIANS),1);
+            double rX = currentGamepad1.right_stick_x;
+            double rY = -currentGamepad1.right_stick_y;
+            double r;
+            if (rY < 0) {
+                r = Math.atan(rY/rX);
+            } else if (rY > 0) {
+                r = -Math.atan(rY/rX);
+            } else {
+                if (rX>=0) {
+                    r = 0;
+                } else {
+                    r = Math.PI;
+                }
+            }
+            //double r = (currentGamepad1.right_stick_x > 0 ? -1 : 1)*(Math.PI*0.5 + Math.atan(-currentGamepad1.right_stick_y / (currentGamepad1.right_stick_x == 0 ? 0.001 : currentGamepad1.right_stick_x)));
+            driveTrain.DriveFieldCentric(X, Y, r, pos.getHeading(AngleUnit.RADIANS),1, telemetry);
 
 
             // claw

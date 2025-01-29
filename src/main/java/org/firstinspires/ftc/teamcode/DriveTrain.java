@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
@@ -23,8 +26,8 @@ public class DriveTrain {
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         if (VelocityMode) {
@@ -68,18 +71,18 @@ public class DriveTrain {
         double driveX = transformDrive(Math.abs(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM)));
         double driveY = transformDrive(Math.abs(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM)));
 
-        DriveFieldCentric(driveX, driveY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed);
+        DriveFieldCentric(driveX, driveY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
     }
 
     public void DriveToPoint(double toX, double toY, double toAngle, double botHeading, double botX, double botY, double speed) {
         double driveX = transformDrive(Math.abs(toX - botX));
         double driveY = transformDrive(Math.abs(toY - botY));
 
-        DriveFieldCentric(driveX, driveY, toAngle, botHeading, speed);
+        DriveFieldCentric(driveX, driveY, toAngle, botHeading, speed, null);
     }
 
     // go to angle of turnX and turnY from current angle
-    public void DriveFieldCentric(double driveX, double driveY, double toAngle, double botHeading, double speed) {
+    public void DriveFieldCentric(double driveX, double driveY, double toAngle, double botHeading, double speed, Telemetry telemetry) {
         // rotate the drive constants
         double X = driveX * Math.cos(-botHeading) - driveY * Math.sin(-botHeading);
         double Y = driveX * Math.sin(-botHeading) + driveY * Math.cos(-botHeading);
@@ -96,6 +99,11 @@ public class DriveTrain {
         double bl = Y - X + r;
         double fr = Y - X - r;
         double br = Y + X - r;
+        telemetry.addLine("Before scaling:");
+        telemetry.addData("fl", fl);
+        telemetry.addData("bl", bl);
+        telemetry.addData("fr", fr);
+        telemetry.addData("br", br);
 
         // scale everything to [-1,1]
         double denominator = (1/speed)*(Math.max(Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br))), 1));
@@ -104,6 +112,12 @@ public class DriveTrain {
         bl /= denominator;
         fr /= denominator;
         br /= denominator;
+        telemetry.addLine("After scaling:");
+        telemetry.addData("fl", fl);
+        telemetry.addData("bl", bl);
+        telemetry.addData("fr", fr);
+        telemetry.addData("br", br);
+
 
         backRight.setPower(br);
         frontRight.setPower(fr);
