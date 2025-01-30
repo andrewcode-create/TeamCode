@@ -37,8 +37,10 @@ public class TeleopMain extends LinearOpMode {
                 hardwareMap.get(DcMotor.class, "frontRight"));
 
         // init claw
-        CustomServo claw = new CustomServo(0.71, 0.85);
+        CustomServo claw = new CustomServo(0.7, 0.43);
+        CustomServo clawRotate = new CustomServo(0, 1, 0.475, 0.004);
         claw.init(hardwareMap.get(Servo.class, "claw"), CustomServo.Position.close);
+        clawRotate.init(hardwareMap.get(Servo.class, "clawRotate"), CustomServo.Position.mid);
 
         // set manual sensor caching
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
@@ -70,7 +72,7 @@ public class TeleopMain extends LinearOpMode {
         increase when you move the robot forward. And the Y (strafe) pod should increase when
         you move the robot to the left.
          */
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         odo.setOffsets(Constants.pinpointRotX, Constants.pinpointRotY);
 
@@ -89,6 +91,8 @@ public class TeleopMain extends LinearOpMode {
         telemetry.addLine("Ready to play, everything initialized.");
         telemetry.update();
         waitForStart();
+
+        double lastR = 0;
 
         long LastFrameTime = System.currentTimeMillis();
         while (opModeIsActive()) {
@@ -117,7 +121,7 @@ public class TeleopMain extends LinearOpMode {
             currentGamepad2.copy(gamepad2);
 
             // do sync if necessary
-            if (currentGamepad1.share && !previousGamepad1.share || currentGamepad2.share && !previousGamepad2.share) {
+            if (currentGamepad1.left_stick_button && currentGamepad1.right_stick_button || currentGamepad2.left_stick_button && currentGamepad2.right_stick_button) {
                 telemetry.addLine("SYNCING FOR 1 SECOND!!!");
                 telemetry.update();
                 // THIS WILL BLOCK FOR 1 SECOND!!!!
@@ -161,38 +165,50 @@ public class TeleopMain extends LinearOpMode {
             double Y = -currentGamepad1.left_stick_y;
             double rX = currentGamepad1.right_stick_x;
             double rY = -currentGamepad1.right_stick_y;
-            double r;
-            if (rX > 0) {
-                if (rY > 0) {
-                    // first quadrant, -pi/2 < r < 0
-                    r = -Math.atan(-rX/rY);
-                } else if (rY < 0) {
-                    // fourth quadrant, -pi < r < -pi/2
-                    r = -Math.PI/2 - Math.atan(rX/(-rY));
+            double r = lastR;
+            if (Math.sqrt(rX*rX + rY*rY) > 0.8) {
+                if (rX > 0) {
+                    if (rY > 0) {
+                        // first quadrant, -pi/2 < r < 0
+                        r = Math.atan(-rX / rY);
+                        telemetry.addLine("quadrant 1");
+                    } else if (rY < 0) {
+                        // fourth quadrant, -pi < r < -pi/2
+                        r = -Math.PI / 2 - Math.atan(rY / (-rX));
+                        telemetry.addLine("quadrant 4");
+                    } else {
+                        // positive x axis
+                        r = -Math.PI / 2;
+                    }
+                } else if (rX < 0) {
+                    if (rY > 0) {
+                        // second quadrant, 0 < r < pi/2
+                        r = -Math.atan(rX / rY);
+                        telemetry.addLine("quadrant 2");
+                    } else if (rY < 0) {
+                        // third quadrant, pi/2 < r < pi
+                        r = Math.PI / 2 + Math.atan(rY / rX);
+                        telemetry.addLine("quadrant 3");
+                    } else {
+                        // negative x axis
+                        r = Math.PI / 2;
+                    }
                 } else {
-                    // positive x axis
-                    r = -Math.PI/2;
-                }
-            } else if (rX < 0) {
-                if (rY > 0) {
-                    // second quadrant, 0 < r < pi/2
-                    r = Math.atan(rX/rY);
-                } else if (rY < 0) {
-                    // third quadrant, pi/2 < r < pi
-                    r = Math.PI/2 + Math.atan(rX/rY);
-                } else {
-                    // negative x axis
-                    r = Math.PI/2;
-                }
-            } else {
-                if (rY > 0) {
-                    // positive y axis
-                    r = 0;
-                } else {
-                    // negative y axis
-                    r = Math.PI;
+                    if (rY > 0) {
+                        // positive y axis
+                        r = 0;
+                    } else if (rY < 0) {
+                        // negative y axis
+                        r = Math.PI;
+                    } else {
+                        // x and y are 0
+                        // should never happen, but just in case
+                        r = 0;
+                    }
                 }
             }
+            lastR = r;
+            telemetry.addData("r (degrees)", r*180/Math.PI);
             /*
             double r;
             if (rY < 0) {
@@ -208,16 +224,25 @@ public class TeleopMain extends LinearOpMode {
             }
             */
 
+            double speed = 1;
+            if (currentGamepad1.left_bumper) speed*=0.8;
+            if (currentGamepad1.right_bumper) speed*=0.4;
+            if (currentGamepad1.right_bumper && currentGamepad1.left_bumper) speed = 0.2;
+
             //double r = (currentGamepad1.right_stick_x > 0 ? -1 : 1)*(Math.PI*0.5 + Math.atan(-currentGamepad1.right_stick_y / (currentGamepad1.right_stick_x == 0 ? 0.001 : currentGamepad1.right_stick_x)));
-            driveTrain.DriveFieldCentric(X, Y, r, pos.getHeading(AngleUnit.RADIANS),1, telemetry);
+            //driveTrain.DriveFieldCentric(X, Y, r, pos.getHeading(AngleUnit.RADIANS),speed, telemetry);
 
 
             // claw
-            if (currentGamepad1.y && !previousGamepad1.y && claw.getPosition() != CustomServo.Position.close) {
+            if ((currentGamepad1.triangle || currentGamepad2.triangle) && !(previousGamepad1.triangle || previousGamepad2.triangle) && claw.getPosition() != CustomServo.Position.close) {
                 claw.moveToPos(CustomServo.Position.close);
-            } else if (currentGamepad1.y && !previousGamepad1.y && claw.getPosition() != CustomServo.Position.open) {
+            } else if ((currentGamepad1.triangle || currentGamepad2.triangle) && !(previousGamepad1.triangle || previousGamepad2.triangle) && claw.getPosition() != CustomServo.Position.open) {
                 claw.moveToPos(CustomServo.Position.open);
             }
+            // clawRotate
+            if (currentGamepad2.left_bumper) clawRotate.move(LastFrameTime, true);
+            if (currentGamepad2.right_bumper) clawRotate.move(LastFrameTime, false);
+            if (currentGamepad1.share || currentGamepad2.share) clawRotate.moveToPos(CustomServo.Position.mid);
 
 
             // do telemetry
@@ -228,6 +253,7 @@ public class TeleopMain extends LinearOpMode {
             telemetry.addLine("SlideRotate Encoder Difference: " + Math.abs(slidesAndRotate.slideRotate.getCurrentPosition() - slidesAndRotate.slideRotate2.getCurrentPosition()) + ", with values " + slidesAndRotate.slideRotate.getCurrentPosition() + " and " + slidesAndRotate.slideRotate2.getCurrentPosition());
             telemetry.addData("Slide state", slidesAndRotate.getStateSlide());
             telemetry.addData("Rotate state", slidesAndRotate.getStateRotate());
+            telemetry.addData("ClawRotate", clawRotate.getRawPosition());
             telemetry.update();
 
 

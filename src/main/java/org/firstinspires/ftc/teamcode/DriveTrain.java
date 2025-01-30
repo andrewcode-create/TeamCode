@@ -55,16 +55,17 @@ public class DriveTrain {
 
     // returns a clamped value for turn speed in [-1,1], given an angle difference
     private double transformRotation(double diff) {
-        final double modifier = 4;
+        final double modifier = 2.5;
         // see https://www.desmos.com/calculator/ujxklm6xd1
         return (2.0/(1+Math.pow(Math.E, -diff*modifier))-1);
     }
 
     // takes in mm
     private double transformDrive(double diff) {
-        final double modifier = 0.1;
+        final double modifier = 0.5;
         // see https://www.desmos.com/calculator/ujxklm6xd1
-        return (2.0/(1+Math.pow(Math.E, -diff*modifier))-1);
+        return clamp(modifier/2*diff, -1, 1);
+        //return (2.0/(1+Math.pow(Math.E, -diff*modifier))-1);
     }
 
     public static double getDistanceToPoint(Pose2D to, Pose2D bot) {
@@ -109,9 +110,10 @@ public class DriveTrain {
 
         // get desired rotation speed and clamp it to [-1,1]
         // positive means turn left, negative means turn right
-        double diff = toAngle - botHeading;
-        while (diff > 180) diff -= 360;
-        while (diff <= -180) diff += 360;
+        double diff = botHeading - toAngle;
+        telemetry.addData("DIFF", diff);
+        while (diff > Math.PI) diff -= 2*Math.PI;
+        while (diff <= -Math.PI) diff += 2*Math.PI;
 
         double r = transformRotation(diff);
 

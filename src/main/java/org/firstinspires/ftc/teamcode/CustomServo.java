@@ -14,6 +14,7 @@ public class CustomServo {
     private boolean isDisabled = false;
     private Position pos;
     public Position getPosition() {return pos;}
+    public double getRawPosition(){return servo.getPosition();}
 
     public CustomServo(double open, double close, double mid, double change) {
         openPos = open;
@@ -72,9 +73,11 @@ public class CustomServo {
             isDisabled = false;
         }
         if (forwards) {
-            servo.setPosition(servo.getPosition() + msElapsed*changePos/1000);
+            servo.setPosition(servo.getPosition() + changePos);
+            //servo.setPosition(servo.getPosition() + msElapsed*changePos/1000.0);
         } else {
-            servo.setPosition(servo.getPosition() - msElapsed*changePos/1000);
+            servo.setPosition(servo.getPosition() - changePos);
+            //servo.setPosition(servo.getPosition() - msElapsed*changePos/1000.0);
         }
         pos = Position.none;
     }
