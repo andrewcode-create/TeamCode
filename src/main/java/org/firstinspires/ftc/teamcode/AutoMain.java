@@ -51,6 +51,26 @@ public class AutoMain extends LinearOpMode {
         broken,
     }
 
+    enum mainState {
+        ground1,
+        ground2,
+        ground3,
+        pickup,
+        drop1,
+        drop2,
+        drop3,
+        drop4,
+        drop5,
+    }
+
+    enum subState {
+        closeClaw,
+        openClaw,
+        lowerSlide,
+        alt1,
+        alt2,
+        alt3,
+    }
 
     @Override
     public void runOpMode() {
@@ -71,8 +91,10 @@ public class AutoMain extends LinearOpMode {
                 hardwareMap.get(DcMotor.class, "frontRight"));
 
         // init claw
-        CustomServo claw = new CustomServo(0.71, 0.85);
+        CustomServo claw = new CustomServo(0.7, 0.43);
+        CustomServo clawRotate = new CustomServo(0, 1, 0.475, 0.004);
         claw.init(hardwareMap.get(Servo.class, "claw"), CustomServo.Position.close);
+        clawRotate.init(hardwareMap.get(Servo.class, "clawRotate"), CustomServo.Position.mid);
 
         // set manual sensor caching
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
@@ -80,32 +102,12 @@ public class AutoMain extends LinearOpMode {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
-        /*
-        // define gamepad 1 and 2
-        Gamepad currentGamepad1 = new Gamepad();
-        Gamepad currentGamepad2 = new Gamepad();
-        Gamepad previousGamepad1 = new Gamepad();
-        Gamepad previousGamepad2 = new Gamepad();
-        */
-
         // set telemetry to update the driver station 10 times per second
         telemetry.setMsTransmissionInterval(100);
 
         // odometer start
         GoBildaPinpointDriver odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
-        /*
-        Set the odometry pod positions relative to the point that the odometry computer tracks around.
-        The X pod offset refers to how far sideways from the tracking point the
-        X (forward) odometry pod is. Left of the center is a positive number,
-        right of center is a negative number. the Y pod offset refers to how far forwards from
-        the tracking point the Y (strafe) odometry pod is. forward of center is a positive number,
-        backwards is a negative number.
-         */
-        /*
-        Set the direction that each of the two odometry pods count. The X (forward) pod should
-        increase when you move the robot forward. And the Y (strafe) pod should increase when
-        you move the robot to the left.
-         */
+
         odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         odo.setOffsets(Constants.pinpointRotX, Constants.pinpointRotY);
@@ -129,11 +131,16 @@ public class AutoMain extends LinearOpMode {
         long LastFrameTime = System.currentTimeMillis();
         long currentStateStartTime = System.currentTimeMillis();
 
-        state2 currentState = state2.start;
-        state2 previousState = state2.start;
+        //state2 currentState = state2.start;
+        //state2 previousState = state2.start;
+        mainState currentMainState = mainState.drop5;
+        subState currentSubState = subState.alt1;
 
-        int hungSpecimenNumber = 0;
-        int groundSpecimensTaken = 0;
+        //int hungSpecimenNumber = 0;
+        //int groundSpecimensTaken = 0;
+
+        int stepnum = 1;
+        int substepnum = 1;
 
         while (opModeIsActive()) {
             long TimeElapsed = System.currentTimeMillis() - LastFrameTime;
@@ -157,6 +164,66 @@ public class AutoMain extends LinearOpMode {
 
             long currentStateTimeElapsed = System.currentTimeMillis() - currentStateStartTime;
 
+            if (stepnum == 1) {
+                //put on high bar, position 5
+                if (substepnum == 1) {
+                    // go to high bar, position 5
+                    driveTrain.DriveToPoint(Constants.Drop5, pos, 1);
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.TopSpecimen);
+                    if (isStopped && currentStateTimeElapsed > 500) {
+                        currentStateStartTime = System.currentTimeMillis();
+                        substepnum++;
+                    }
+                } else if (substepnum == 2) {
+                    // lower linear slide
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.DropTopSpecimen);
+                    if (currentStateTimeElapsed > 500) {
+                        currentStateStartTime = System.currentTimeMillis();
+                        substepnum++;
+                    }
+                } else if (substepnum == 3) {
+                    // open claw
+                    claw.moveToPos(CustomServo.Position.open);
+                    if (currentStateTimeElapsed > 500) {
+                        currentStateStartTime = System.currentTimeMillis();
+                        substepnum++;
+                    }
+                } else  if (substepnum == 4) {
+                    // go back 160 mm
+                    Pose2D toPoint = new Pose2D(DistanceUnit.MM, Constants.Drop5.getX(DistanceUnit.MM) - 160, Constants.Drop5.getY(DistanceUnit.MM), AngleUnit.DEGREES, Constants.Drop5.getHeading(AngleUnit.DEGREES));
+                    driveTrain.DriveToPointGoThrough(toPoint, pos, 1);
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
+                    if (DriveTrain.getDistanceToPoint(toPoint, pos) < 20) {
+                        currentStateStartTime = System.currentTimeMillis();
+                        substepnum++;
+                    }
+                } else {
+                    // done, move to next step
+                    stepnum++;
+                    substepnum = 1;
+                    currentStateStartTime = System.currentTimeMillis();
+                }
+            } else if (stepnum == 2) {
+                // go to x570, y930, r-90, stop
+                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 570, 930, AngleUnit.DEGREES, -90);
+                driveTrain.DriveToPoint(toPoint, pos, 1);
+                if (isStopped && currentStateTimeElapsed > 500) {
+                    // done, move to next step
+                    stepnum++;
+                    substepnum = 1;
+                    currentStateStartTime = System.currentTimeMillis();
+                }
+            }
+
+
+            /*
+            if (currentMainState == mainState.drop5) {
+
+            }
+            */
+
+
+            /*
             switch (currentState) {
                 case start:
                     previousState = currentState;
@@ -268,7 +335,7 @@ public class AutoMain extends LinearOpMode {
                     }
                     break;
             }
-
+            */
             /*
             switch (currentState) {
                 case start:

@@ -50,8 +50,7 @@ public class Constants {
 
     /*
     Plan for auto:
-    1. put on high bar, position 5
-    2. go back 160 mm, continue
+    1. put on high bar, position 5 and go back 160 mm, continue
     3. go to x570, y930, r-90, stop
     4. go to x810, y910, r-90, stop
     5. go to x810, y752, r-90, stop
