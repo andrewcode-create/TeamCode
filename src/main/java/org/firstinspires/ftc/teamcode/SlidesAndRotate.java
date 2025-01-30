@@ -304,8 +304,6 @@ public class SlidesAndRotate {
             slide2.setPower(speed);
             stateSlide = State.Preset;
         }
-
-
     }
     public void MoveSlide(Presets preset) {
         MoveSlide(preset, 0.8);

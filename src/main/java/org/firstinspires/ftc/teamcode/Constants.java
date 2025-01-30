@@ -51,19 +51,17 @@ public class Constants {
     /*
     Plan for auto:
     1. put on high bar, position 5 and go back 160 mm, continue
-    3. go to x570, y930, r-90, stop
-    4. go to x810, y910, r-90, stop
-    5. go to x810, y752, r-90, stop
-    6. go to drop off ( x170 y760, r180 )
-    7. go to x810, y250, r-90, stop
-    8. go to x400, y260, r-90, continue
-    9. go to x150, y466, r180, stop & pick up
-    10. go to x400, y466, r180, continue
-    11. go to 160mm behind high bar, continue
-    12. put on high bar
-    13. go back 160 mm, continue
-    14. go to pick up (x170, y760, r180)
-    15. repeat 11-15 4 times
-    16. park at drop off
+    2. go to x570, y930, r-90, stop
+    3. go to x810, y910, r-90, stop
+    4. go to x810, y752, r-90, stop
+    5. go to drop off ( x170 y760, r180 )
+    6. go to x810, y250, r-90, stop
+    7. go to x400, y260, r-90, continue
+    8. go to x150, y466, r180, stop & pick up
+    9. go to x400, y466, r180, continue
+    10. go to 160mm behind high bar, continue, put on high bar, go back 160 mm, continue
+    11. go to pick up (x170, y760, r180)
+    12. repeat 10-11 4 times
+    13. park at drop off
      */
 }

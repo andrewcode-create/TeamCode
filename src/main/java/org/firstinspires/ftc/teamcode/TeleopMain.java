@@ -38,7 +38,7 @@ public class TeleopMain extends LinearOpMode {
 
         // init claw
         CustomServo claw = new CustomServo(0.7, 0.43);
-        CustomServo clawRotate = new CustomServo(0, 1, 0.475, 0.004);
+        CustomServo clawRotate = new CustomServo(0, 1, 0.475, 0.008);
         claw.init(hardwareMap.get(Servo.class, "claw"), CustomServo.Position.close);
         clawRotate.init(hardwareMap.get(Servo.class, "clawRotate"), CustomServo.Position.mid);
 
@@ -209,28 +209,14 @@ public class TeleopMain extends LinearOpMode {
             }
             lastR = r;
             telemetry.addData("r (degrees)", r*180/Math.PI);
-            /*
-            double r;
-            if (rY < 0) {
-                r = Math.atan(rY/rX);
-            } else if (rY > 0) {
-                r = -Math.atan(rY/rX);
-            } else {
-                if (rX>=0) {
-                    r = 0;
-                } else {
-                    r = Math.PI;
-                }
-            }
-            */
 
             double speed = 1;
-            if (currentGamepad1.left_bumper) speed*=0.8;
-            if (currentGamepad1.right_bumper) speed*=0.4;
+            if (currentGamepad1.left_bumper) speed*=0.4;
+            if (currentGamepad1.right_bumper) speed*=0.8;
             if (currentGamepad1.right_bumper && currentGamepad1.left_bumper) speed = 0.2;
 
             //double r = (currentGamepad1.right_stick_x > 0 ? -1 : 1)*(Math.PI*0.5 + Math.atan(-currentGamepad1.right_stick_y / (currentGamepad1.right_stick_x == 0 ? 0.001 : currentGamepad1.right_stick_x)));
-            //driveTrain.DriveFieldCentric(X, Y, r, pos.getHeading(AngleUnit.RADIANS),speed, telemetry);
+            driveTrain.DriveFieldCentric(X, Y, r, pos.getHeading(AngleUnit.RADIANS), speed, telemetry);
 
 
             // claw

@@ -111,7 +111,7 @@ public class DriveTrain {
         // get desired rotation speed and clamp it to [-1,1]
         // positive means turn left, negative means turn right
         double diff = botHeading - toAngle;
-        telemetry.addData("DIFF", diff);
+        //telemetry.addData("DIFF", diff);
         while (diff > Math.PI) diff -= 2*Math.PI;
         while (diff <= -Math.PI) diff += 2*Math.PI;
 
@@ -121,11 +121,14 @@ public class DriveTrain {
         double bl = Y - X + r;
         double fr = Y - X - r;
         double br = Y + X - r;
+        /*
         telemetry.addLine("Before scaling:");
         telemetry.addData("fl", fl);
         telemetry.addData("bl", bl);
         telemetry.addData("fr", fr);
         telemetry.addData("br", br);
+
+         */
 
         // scale everything to [-1,1]
         double denominator = (1/speed)*(Math.max(Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br))), 1));
@@ -133,12 +136,13 @@ public class DriveTrain {
         fl /= denominator;
         bl /= denominator;
         fr /= denominator;
-        br /= denominator;
+        br /= denominator;/*
         telemetry.addLine("After scaling:");
         telemetry.addData("fl", fl);
         telemetry.addData("bl", bl);
         telemetry.addData("fr", fr);
         telemetry.addData("br", br);
+        */
 
 
         backRight.setPower(br);
