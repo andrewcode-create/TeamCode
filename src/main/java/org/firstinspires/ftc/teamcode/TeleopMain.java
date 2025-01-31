@@ -134,9 +134,9 @@ public class TeleopMain extends LinearOpMode {
             if (currentGamepad1.left_trigger!=0 || currentGamepad1.right_trigger!=0 || currentGamepad1.dpad_up || currentGamepad1.dpad_down ||
                     currentGamepad2.left_trigger!=0 || currentGamepad2.right_trigger!=0 || currentGamepad2.dpad_up || currentGamepad2.dpad_down){
                 currentPreset = null;
-            } else if (currentGamepad1.a && !previousGamepad1.a || currentGamepad2.a && !previousGamepad2.a) {
+            } else if ( currentGamepad2.a && !previousGamepad2.a) {
                 currentPreset = SlidesAndRotate.Presets.WallPickup;
-            } else if (currentGamepad1.b && !previousGamepad1.b || currentGamepad2.b && !previousGamepad2.b) {
+            } else if (currentGamepad2.b && !previousGamepad2.b) {
                 currentPreset = SlidesAndRotate.Presets.TopSpecimen;
             } else if (currentGamepad1.guide && !previousGamepad1.guide || currentGamepad2.guide && !previousGamepad2.guide) {
                 currentPreset = SlidesAndRotate.Presets.Ascent;
@@ -161,70 +161,90 @@ public class TeleopMain extends LinearOpMode {
                     currentGamepad1.right_bumper ? -currentGamepad1.left_stick_y   * (currentGamepad1.right_bumper ? -1 : 1) : -currentGamepad1.right_stick_y * (currentGamepad1.right_bumper ? -1 : 1),
                     currentGamepad1.left_bumper ? 0.5 : 1);
              */
-            double X = currentGamepad1.left_stick_x;
-            double Y = -currentGamepad1.left_stick_y;
-            double rX = currentGamepad1.right_stick_x;
-            double rY = -currentGamepad1.right_stick_y;
-            double r = lastR;
-            if (Math.sqrt(rX*rX + rY*rY) > 0.8) {
-                if (rX > 0) {
-                    if (rY > 0) {
-                        // first quadrant, -pi/2 < r < 0
-                        r = Math.atan(-rX / rY);
-                        telemetry.addLine("quadrant 1");
-                    } else if (rY < 0) {
-                        // fourth quadrant, -pi < r < -pi/2
-                        r = -Math.PI / 2 - Math.atan(rY / (-rX));
-                        telemetry.addLine("quadrant 4");
-                    } else {
-                        // positive x axis
-                        r = -Math.PI / 2;
-                    }
-                } else if (rX < 0) {
-                    if (rY > 0) {
-                        // second quadrant, 0 < r < pi/2
-                        r = -Math.atan(rX / rY);
-                        telemetry.addLine("quadrant 2");
-                    } else if (rY < 0) {
-                        // third quadrant, pi/2 < r < pi
-                        r = Math.PI / 2 + Math.atan(rY / rX);
-                        telemetry.addLine("quadrant 3");
-                    } else {
-                        // negative x axis
-                        r = Math.PI / 2;
-                    }
-                } else {
-                    if (rY > 0) {
-                        // positive y axis
-                        r = 0;
-                    } else if (rY < 0) {
-                        // negative y axis
-                        r = Math.PI;
-                    } else {
-                        // x and y are 0
-                        // should never happen, but just in case
-                        r = 0;
-                    }
-                }
-            }
-            lastR = r;
-            telemetry.addData("r (degrees)", r*180/Math.PI);
-
             double speed = 1;
             if (currentGamepad1.left_bumper) speed*=0.4;
             if (currentGamepad1.right_bumper) speed*=0.8;
             if (currentGamepad1.right_bumper && currentGamepad1.left_bumper) speed = 0.2;
 
+            double r = lastR;
+
+
+            if (currentGamepad1.left_stick_x != 0 || currentGamepad1.right_stick_x != 0 || currentGamepad1.left_stick_y != 0 || currentGamepad1.triangle || currentGamepad1.cross || currentGamepad1.circle || currentGamepad1.square) {
+                // gamepad 1 driving
+                if (currentGamepad1.square) r=0;
+                else if (currentGamepad1.triangle) r=Math.PI;
+                else if (currentGamepad1.circle) r=-Math.PI/2;
+                else if (currentGamepad1.cross) r=Math.PI/2;
+                else r = pos.getHeading(AngleUnit.RADIANS) + (Math.PI / 2.0) / 100.0 * currentGamepad1.left_stick_x;
+                driveTrain.DriveFieldCentric(currentGamepad1.left_stick_x, -currentGamepad1.left_stick_y, r, pos.getHeading(AngleUnit.RADIANS), speed, telemetry);
+            } else {
+                // gamepad 2 driving
+                double X = currentGamepad2.left_stick_x;
+                double Y = -currentGamepad2.left_stick_y;
+                double rX = currentGamepad2.right_stick_x;
+                double rY = -currentGamepad2.right_stick_y;
+                if (Math.sqrt(rX*rX + rY*rY) > 0.8) {
+                    if (rX > 0) {
+                        if (rY > 0) {
+                            // first quadrant, -pi/2 < r < 0
+                            r = Math.atan(-rX / rY);
+                            telemetry.addLine("quadrant 1");
+                        } else if (rY < 0) {
+                            // fourth quadrant, -pi < r < -pi/2
+                            r = -Math.PI / 2 - Math.atan(rY / (-rX));
+                            telemetry.addLine("quadrant 4");
+                        } else {
+                            // positive x axis
+                            r = -Math.PI / 2;
+                        }
+                    } else if (rX < 0) {
+                        if (rY > 0) {
+                            // second quadrant, 0 < r < pi/2
+                            r = -Math.atan(rX / rY);
+                            telemetry.addLine("quadrant 2");
+                        } else if (rY < 0) {
+                            // third quadrant, pi/2 < r < pi
+                            r = Math.PI / 2 + Math.atan(rY / rX);
+                            telemetry.addLine("quadrant 3");
+                        } else {
+                            // negative x axis
+                            r = Math.PI / 2;
+                        }
+                    } else {
+                        if (rY > 0) {
+                            // positive y axis
+                            r = 0;
+                        } else if (rY < 0) {
+                            // negative y axis
+                            r = Math.PI;
+                        } else {
+                            // x and y are 0
+                            // should never happen, but just in case
+                            r = 0;
+                        }
+                    }
+                }
+                driveTrain.DriveFieldCentric(X, Y, r, pos.getHeading(AngleUnit.RADIANS), speed, telemetry);
+            }
+
+            lastR = r;
+            telemetry.addData("r (degrees)", r*180/Math.PI);
+
+
+
             //double r = (currentGamepad1.right_stick_x > 0 ? -1 : 1)*(Math.PI*0.5 + Math.atan(-currentGamepad1.right_stick_y / (currentGamepad1.right_stick_x == 0 ? 0.001 : currentGamepad1.right_stick_x)));
-            driveTrain.DriveFieldCentric(X, Y, r, pos.getHeading(AngleUnit.RADIANS), speed, telemetry);
+
 
 
             // claw
-            if ((currentGamepad1.triangle || currentGamepad2.triangle) && !(previousGamepad1.triangle || previousGamepad2.triangle) && claw.getPosition() != CustomServo.Position.close) {
-                claw.moveToPos(CustomServo.Position.close);
-            } else if ((currentGamepad1.triangle || currentGamepad2.triangle) && !(previousGamepad1.triangle || previousGamepad2.triangle) && claw.getPosition() != CustomServo.Position.open) {
-                claw.moveToPos(CustomServo.Position.open);
+            if ((currentGamepad1.dpad_right && !previousGamepad1.dpad_right) || (currentGamepad2.triangle && !previousGamepad2.triangle)) {
+                if (claw.getPosition() != CustomServo.Position.close) {
+                    claw.moveToPos(CustomServo.Position.close);
+                } else if (claw.getPosition() != CustomServo.Position.open) {
+                    claw.moveToPos(CustomServo.Position.open);
+                }
             }
+
             // clawRotate
             if (currentGamepad2.left_bumper) clawRotate.move(LastFrameTime, true);
             if (currentGamepad2.right_bumper) clawRotate.move(LastFrameTime, false);
