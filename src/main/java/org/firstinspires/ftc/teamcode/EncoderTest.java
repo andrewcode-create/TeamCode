@@ -90,6 +90,7 @@ public class EncoderTest extends LinearOpMode {
         double lastR = 0;
 
         long LastFrameTime = System.currentTimeMillis();
+        boolean pressed = false;
         while (opModeIsActive()) {
             long TimeElapsed = System.currentTimeMillis() - LastFrameTime;
             LastFrameTime = System.currentTimeMillis();
@@ -99,12 +100,31 @@ public class EncoderTest extends LinearOpMode {
                 hub.clearBulkCache();
             }
 
+
+
             // odometer update
             odo.update();
 
             Pose2D pos = odo.getPosition();
             String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
             telemetry.addData("Position", data);
+
+            if (gamepad1.square) {
+                for (DcMotor m : blah) {
+                    m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                }
+                pressed = true;
+
+            } else if (gamepad1.triangle) {
+                pressed = false;
+                for (DcMotor m : blah) {
+                    m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                }
+            }
+
+            if (pressed) {
+                driveTrain.DriveToPoint(new Pose2D(DistanceUnit.MM, 500, 500, AngleUnit.DEGREES, 0), pos, 1);
+            }
 
 
             // do telemetry
