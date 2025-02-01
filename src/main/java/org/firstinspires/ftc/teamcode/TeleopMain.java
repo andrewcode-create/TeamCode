@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import java.util.List;
 import java.util.Locale;
 
-@TeleOp(name = "TeleopMain")
+@TeleOp(name = "TeleopMain3")
 public class TeleopMain extends LinearOpMode {
 
     @Override
@@ -147,8 +147,14 @@ public class TeleopMain extends LinearOpMode {
                 slidesAndRotate.Rotate(currentGamepad1.left_trigger - currentGamepad1.right_trigger + currentGamepad2.left_trigger - currentGamepad2.right_trigger);
                 slidesAndRotate.MoveSlide((currentGamepad1.dpad_up || currentGamepad2.dpad_up) ? 0.8 : 0 + ((currentGamepad1.dpad_down || currentGamepad2.dpad_down) ? -0.8 : 0));
             } else {
+                telemetry.addLine("going into function MoveSlideTMP");
+                telemetry.update();
+                sleep(1000);
+                slidesAndRotate.MoveSlideTMP(currentPreset, telemetry);
+                /*
                 slidesAndRotate.Rotate(currentPreset);
                 slidesAndRotate.MoveSlide(currentPreset);
+                */
             }
 
             // Do the drivetrain. Left bumper is slow mode, right bumper is reverse the robot (does it work?).
@@ -171,11 +177,11 @@ public class TeleopMain extends LinearOpMode {
 
             if (currentGamepad1.left_stick_x != 0 || currentGamepad1.right_stick_x != 0 || currentGamepad1.left_stick_y != 0 || currentGamepad1.triangle || currentGamepad1.cross || currentGamepad1.circle || currentGamepad1.square) {
                 // gamepad 1 driving
-                if (currentGamepad1.square) r=0;
-                else if (currentGamepad1.triangle) r=Math.PI;
+                if (currentGamepad1.square) r=Math.PI/2;
+                else if (currentGamepad1.triangle) r=0;
                 else if (currentGamepad1.circle) r=-Math.PI/2;
-                else if (currentGamepad1.cross) r=Math.PI/2;
-                else r = pos.getHeading(AngleUnit.RADIANS) + (Math.PI / 2.0) / 100.0 * currentGamepad1.left_stick_x;
+                else if (currentGamepad1.cross) r=Math.PI;
+                else r = pos.getHeading(AngleUnit.RADIANS) + (Math.PI / 2.0)/2*currentGamepad1.right_stick_x;
                 driveTrain.DriveFieldCentric(currentGamepad1.left_stick_x, -currentGamepad1.left_stick_y, r, pos.getHeading(AngleUnit.RADIANS), speed, telemetry);
             } else {
                 // gamepad 2 driving

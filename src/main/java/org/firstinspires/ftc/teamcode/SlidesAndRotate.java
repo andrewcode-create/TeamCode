@@ -4,6 +4,8 @@ import static android.os.SystemClock.sleep;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class SlidesAndRotate {
     public DcMotor slide;
     public DcMotor slide2;
@@ -238,6 +240,33 @@ public class SlidesAndRotate {
         return GetRemainingSlideDistance((slideRotate.getCurrentPosition() + slideRotate2.getCurrentPosition())/2, (slide.getCurrentPosition()+slide2.getCurrentPosition())/2);
     }
 
+    public void MoveSlideTMP(Presets preset, Telemetry telemetry) {
+        telemetry.addLine("STARTING TELEMETRY MOVESLIDETMP");
+        telemetry.update();
+        sleep(2000);
+        slide.setTargetPosition(preset.slideEncoder);
+        slide2.setTargetPosition(preset.slideEncoder);
+        telemetry.addLine("Started target position slide");
+        telemetry.update();
+        sleep(2000);
+        slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        telemetry.addLine("Started run to position slide");
+        telemetry.update();
+        sleep(2000);
+        slide.setPower(0.7);
+        slide2.setPower(0.7);
+        telemetry.addLine("Set power slide");
+        telemetry.update();
+        sleep(2000);
+
+        telemetry.addLine("DONE!!!");
+        telemetry.update();
+        sleep(2000);
+
+        stateSlide = State.Preset;
+    }
+
     public void MoveSlide(Presets preset, double speed) {
         // check if encoders don't match, with buffer
         if (Math.abs(slide.getCurrentPosition() - slide2.getCurrentPosition()) > SlideBuffer) {
@@ -256,7 +285,6 @@ public class SlidesAndRotate {
 
         // stop slide motors if broken
         if (stateSlide == State.Broken) {
-            // TODO proper logging
             slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slide.setPower(0);
             slide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -319,7 +347,6 @@ public class SlidesAndRotate {
 
         // stop slide motors if broken
         if (stateSlide == State.Broken) {
-            // TODO proper logging
             slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slide.setPower(0);
             slide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
