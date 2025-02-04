@@ -194,7 +194,7 @@ public class TeleopMain extends LinearOpMode {
                 else if (currentGamepad1.triangle) r=0;
                 else if (currentGamepad1.circle) r=-Math.PI/2;
                 else if (currentGamepad1.cross) r=Math.PI;
-                else if (currentGamepad1.right_stick_x != 0 && Math.abs(r/(Math.PI/2)) <= 0.01) r = pos.getHeading(AngleUnit.RADIANS) + (-Math.PI / 2.0)/2*currentGamepad1.right_stick_x;
+                else r = pos.getHeading(AngleUnit.RADIANS) + (-Math.PI / 2.0)/2*currentGamepad1.right_stick_x;
                 driveTrain.DriveFieldCentric(currentGamepad1.left_stick_x, -currentGamepad1.left_stick_y, r, pos.getHeading(AngleUnit.RADIANS), speed, telemetry);
             } else {
                 // gamepad 2 driving
