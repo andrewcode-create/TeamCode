@@ -121,6 +121,13 @@ public class TeleopMain extends LinearOpMode {
             currentGamepad1.copy(gamepad1);
             currentGamepad2.copy(gamepad2);
 
+            // do resetHeading if necessary
+            if (currentGamepad1.touchpad || currentGamepad2.touchpad) {
+                telemetry.addLine("RECALIBRATING IMU");
+                odo.recalibrateIMU();
+                sleep(500);
+            }
+
             // do sync if necessary
             if (currentGamepad1.left_stick_button && currentGamepad1.right_stick_button || currentGamepad2.left_stick_button && currentGamepad2.right_stick_button) {
                 telemetry.addLine("SYNCING FOR 1 SECOND!!!");
@@ -261,6 +268,13 @@ public class TeleopMain extends LinearOpMode {
                     claw.moveToPos(CustomServo.Position.close);
                 } else if (claw.getPosition() != CustomServo.Position.open) {
                     claw.moveToPos(CustomServo.Position.open);
+                }
+            }
+
+            if (currentGamepad1.dpad_left && !currentGamepad1.dpad_up && !currentGamepad1.dpad_down ||
+                    currentGamepad2.dpad_left && !currentGamepad2.dpad_up && !currentGamepad2.dpad_down) {
+                if (claw.getPosition() != CustomServo.Position.mid) {
+                    claw.moveToPos(CustomServo.Position.mid);
                 }
             }
 

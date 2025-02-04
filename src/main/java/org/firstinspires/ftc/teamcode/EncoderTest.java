@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import java.util.List;
 import java.util.Locale;
 
-@TeleOp(name = "TeleopMain")
+@TeleOp(name = "EncoderTest")
 public class EncoderTest extends LinearOpMode {
 
     @Override
@@ -95,6 +95,7 @@ public class EncoderTest extends LinearOpMode {
         long LastFrameTime = System.currentTimeMillis();
         boolean pressed = false;
         while (opModeIsActive()) {
+            telemetry.addLine("WOOOOOOO222222222!");
             long TimeElapsed = System.currentTimeMillis() - LastFrameTime;
             LastFrameTime = System.currentTimeMillis();
 

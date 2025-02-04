@@ -70,8 +70,8 @@ public class SlidesAndRotate {
 
 
     // Slide constants
-    public final int RotateDownLim = 2675;
-    public final int RotateUpLim = -50;
+    public final int RotateDownLim = 2800;
+    public final int RotateUpLim = -100;
     public final int RotateVEncoder = 0;
     public final int RotateHEncoder = 2600;
     private final int RotateBuffer = 200;

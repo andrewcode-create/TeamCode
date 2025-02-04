@@ -19,7 +19,7 @@ public class Constants {
     public static final Pose2D startingPosTeleop = new Pose2D(DistanceUnit.MM, 0, 1330, AngleUnit.DEGREES, 0);
 
     // specimen pickup from observation zone
-    public static final Pose2D pickUpSpecimen = new Pose2D(DistanceUnit.MM, 165, 750, AngleUnit.DEGREES, 180);
+    public static final Pose2D pickUpSpecimen = new Pose2D(DistanceUnit.MM, -10, 600, AngleUnit.DEGREES, 180);
 
     // Autonomous points for high bar
     public static final Pose2D Drop1 = new Pose2D(DistanceUnit.MM, 810, 1470, AngleUnit.DEGREES, 0);
