@@ -10,8 +10,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 // Angles are normalized, with positive being to the left (counterclockwise from above)
 // (0,0) is considered to be the corner of the observation zone.
 public class Constants {
-    public static final double pinpointRotX = 100;
-    public static final double pinpointRotY = 100;
+    public static final double pinpointRotX = 15;
+    public static final double pinpointRotY = 15;
 
 
     // starting position of the robot

@@ -62,7 +62,7 @@ public class DriveTrain {
 
     // takes in mm
     private double transformDrive(double diff) {
-        final double modifier = 0.5;
+        final double modifier = 0.0035;
         // see https://www.desmos.com/calculator/ujxklm6xd1
         return clamp(modifier/2*diff, -1, 1);
         //return (2.0/(1+Math.pow(Math.E, -diff*modifier))-1);
@@ -76,16 +76,16 @@ public class DriveTrain {
     }
 
     public void DriveToPoint(Pose2D to, Pose2D bot, double speed) {
-        double driveX = transformDrive(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
-        double driveY = transformDrive(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
+        double stickY = transformDrive(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
+        double stickX = -transformDrive(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
 
-        DriveFieldCentric(driveX, driveY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
+        DriveFieldCentric(stickX, stickY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
     }
     public void DriveToPointGoThrough(Pose2D to, Pose2D bot, double speed) {
-        double driveX = (to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
-        double driveY = (to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
+        double stickY = (to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
+        double stickX = -(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
 
-        DriveFieldCentric(driveX, driveY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
+        DriveFieldCentric(stickX, stickY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
     }
 
     /*

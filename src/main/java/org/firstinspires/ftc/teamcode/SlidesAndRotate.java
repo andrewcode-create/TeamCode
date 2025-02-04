@@ -36,8 +36,8 @@ public class SlidesAndRotate {
     }
     public enum Presets {
         WallPickup(0, 0, entryType.encoder),
-        TopSpecimen(1800, 0, entryType.encoder),
-        DropTopSpecimen(1600, 0, entryType.encoder),
+        TopSpecimen(2550, 0, entryType.encoder),
+        DropTopSpecimen(1775, 0, entryType.encoder),
         Ascent(0, 0, entryType.encoder);
 
         // slide encoder value for the preset
@@ -54,7 +54,7 @@ public class SlidesAndRotate {
          * @param slideRotate - degrees above horizontal the slide should be.
          */
         Presets(double slide, double slideRotate, entryType type) {
-            if (type == entryType.real) {
+            if (type == entryType.encoder) {
                 this.slideEncoder = (int)slide;
                 this.slideRotateEncoder = (int)slideRotate;
             } else {
@@ -69,17 +69,17 @@ public class SlidesAndRotate {
 
 
     // Slide constants
-    public final int RotateDownLim = 2600;
-    public final int RotateUpLim = 0;
+    public final int RotateDownLim = 2675;
+    public final int RotateUpLim = -50;
     public final int RotateVEncoder = 0;
     public final int RotateHEncoder = 2600;
     private final int RotateBuffer = 200;
 
-    public final int SlideMaxEncoder = 2100;
+    public final int SlideMaxEncoder = 4080;
     public final double SlideMaxLength = 25.5;
-    public final int SlideBufferDown = 100;
-    public final int SlideBufferUp = 150;
-    public final int SlideBuffer = 100;
+    public final int SlideBufferDown = 200;
+    public final int SlideBufferUp = 300;
+    public final int SlideBuffer = 250;
 
     public final double SlidePositionInRobotFromBack = 11;
     public final double SlideAllowedOffsetInSlideCanGoPastBackOfRobot = 0;
@@ -149,6 +149,19 @@ public class SlidesAndRotate {
             slideRotate2.setPower(0);
             return;
         }
+/*
+        Presets preset1;
+        if (preset.equals("WallPickup")) {
+            preset1 = Presets.WallPickup;
+        } else if (preset.equals("Ascent")) {
+            preset1 = Presets.Ascent;
+        } else if (preset.equals("TopSpecimen")) {
+            preset1 = Presets.TopSpecimen;
+        } else if (preset.equals("DropTopSpecimen")) {
+            preset1 = Presets.DropTopSpecimen;
+        } else {
+            throw new Error("PRESET NOT VALID: " + preset);
+        }*/
 
         // TODO do I need to check for if the position is reached, or not?
         stateRotate = State.Preset;
@@ -240,12 +253,25 @@ public class SlidesAndRotate {
         return GetRemainingSlideDistance((slideRotate.getCurrentPosition() + slideRotate2.getCurrentPosition())/2, (slide.getCurrentPosition()+slide2.getCurrentPosition())/2);
     }
 
-    public void MoveSlideTMP(Presets preset, Telemetry telemetry) {
+    /*public void MoveSlideTMP(String preset, Telemetry telemetry) {
+
+        Presets preset1;
+        if (preset.equals("WallPickup")) {
+            preset1 = Presets.WallPickup;
+        } else if (preset.equals("Ascent")) {
+            preset1 = Presets.Ascent;
+        } else if (preset.equals("TopSpecimen")) {
+            preset1 = Presets.TopSpecimen;
+        } else if (preset.equals("DropTopSpecimen")) {
+            preset1 = Presets.DropTopSpecimen;
+        } else {
+            throw new Error("PRESET NOT VALID: " + preset);
+        }
         telemetry.addLine("STARTING TELEMETRY MOVESLIDETMP");
         telemetry.update();
         sleep(2000);
-        slide.setTargetPosition(preset.slideEncoder);
-        slide2.setTargetPosition(preset.slideEncoder);
+        slide.setTargetPosition(preset1.slideEncoder);
+        slide2.setTargetPosition(preset1.slideEncoder);
         telemetry.addLine("Started target position slide");
         telemetry.update();
         sleep(2000);
@@ -265,7 +291,7 @@ public class SlidesAndRotate {
         sleep(2000);
 
         stateSlide = State.Preset;
-    }
+    }*/
 
     public void MoveSlide(Presets preset, double speed) {
         // check if encoders don't match, with buffer
@@ -290,7 +316,19 @@ public class SlidesAndRotate {
             slide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slide2.setPower(0);
             return;
-        }
+        }/*
+        Presets preset1;
+        if (preset.equals("WallPickup")) {
+            preset1 = Presets.WallPickup;
+        } else if (preset.equals("Ascent")) {
+            preset1 = Presets.Ascent;
+        } else if (preset.equals("TopSpecimen")) {
+            preset1 = Presets.TopSpecimen;
+        } else if (preset.equals("DropTopSpecimen")) {
+            preset1 = Presets.DropTopSpecimen;
+        } else {
+            throw new Error("PRESET NOT VALID: " + preset);
+        }*/
 
         double remSlideDist = GetRemainingSlideDistance();
         int slideEncoder = (slide.getCurrentPosition() + slide2.getCurrentPosition())/2;

@@ -35,6 +35,9 @@ public class EncoderTest extends LinearOpMode {
                 hardwareMap.get(DcMotor.class, "frontLeft"),
                 hardwareMap.get(DcMotor.class, "frontRight"));
 
+        DcMotor slideLeft =  hardwareMap.get(DcMotor.class, "slideLeft");
+        DcMotor slideRight = hardwareMap.get(DcMotor.class, "slideRight");
+
         for (DcMotor m : blah) {
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
@@ -109,26 +112,30 @@ public class EncoderTest extends LinearOpMode {
             String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
             telemetry.addData("Position", data);
 
-            if (gamepad1.square) {
+            if (gamepad1.square || gamepad2.square) {
                 for (DcMotor m : blah) {
                     m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 }
                 pressed = true;
 
-            } else if (gamepad1.triangle) {
+            } else if (gamepad1.triangle || gamepad2.triangle) {
                 pressed = false;
                 for (DcMotor m : blah) {
                     m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 }
             }
 
+            telemetry.addData("Pressed", pressed);
+
             if (pressed) {
-                driveTrain.DriveToPoint(new Pose2D(DistanceUnit.MM, 500, 500, AngleUnit.DEGREES, 0), pos, 1);
+                driveTrain.DriveToPoint(Constants.Drop5, pos, 1);
             }
 
 
             // do telemetry
             telemetry.addData("MS update Time", TimeElapsed);
+            telemetry.addData("SlideLeft", slideLeft.getCurrentPosition());
+            telemetry.addData("SlideRight", slideRight.getCurrentPosition());
             telemetry.update();
 
 
