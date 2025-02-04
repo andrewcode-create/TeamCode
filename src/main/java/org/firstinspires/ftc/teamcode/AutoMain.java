@@ -162,7 +162,7 @@ public class AutoMain extends LinearOpMode {
 
             Pose2D vel = odo.getVelocity();
 
-            boolean isStopped = vel.getX(DistanceUnit.MM) < 1 && vel.getY(DistanceUnit.MM) < 1 && vel.getHeading(AngleUnit.DEGREES) < 2;
+            boolean isStopped = vel.getX(DistanceUnit.MM) < 0.5 && vel.getY(DistanceUnit.MM) < 0.5 && vel.getHeading(AngleUnit.DEGREES) < 2;
 
             long currentStateTimeElapsed = System.currentTimeMillis() - currentStateStartTime;
 
@@ -171,7 +171,7 @@ public class AutoMain extends LinearOpMode {
                 if (substepnum == 1) {
                     // go to high bar, position 5
                     driveTrain.DriveToPoint(Constants.Drop5, pos, 0.5);
-                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.TopSpecimen);
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.TopSpecimenXTraHigh);
                     if (isStopped && currentStateTimeElapsed > 1000) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
@@ -207,8 +207,8 @@ public class AutoMain extends LinearOpMode {
                 }
             } else if (stepnum == 2) {
                 // go to x650, y660, r-90, stop
-                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 650, 660, AngleUnit.DEGREES, -90);
-                driveTrain.DriveToPoint(toPoint, pos, 0.5);
+                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 650, 700, AngleUnit.DEGREES, 0);
+                driveTrain.DriveToPoint(toPoint, pos, 0.9);
                 if (isStopped && currentStateTimeElapsed > 500) {
                     // done, move to next step
                     stepnum++;
@@ -217,8 +217,8 @@ public class AutoMain extends LinearOpMode {
                 }
             } else if (stepnum == 3) {
                 // go to x810, y910, r-90, stop
-                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 650, 600, AngleUnit.DEGREES, -90);
-                driveTrain.DriveToPoint(toPoint, pos, 0.5);
+                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 850, 550, AngleUnit.DEGREES, -90);
+                driveTrain.DriveToPoint(toPoint, pos, 0.7);
                 if (isStopped && currentStateTimeElapsed > 500) {
                     // done, move to next step
                     stepnum++;
@@ -237,8 +237,8 @@ public class AutoMain extends LinearOpMode {
                 //}
             } else if (stepnum == 5) {
                 // go to x50 y550 r180
-                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 50, 600, AngleUnit.DEGREES, -180);
-                driveTrain.DriveToPoint(toPoint, pos, 0.5);
+                Pose2D toPoint = new Pose2D(DistanceUnit.MM, -80, 600, AngleUnit.DEGREES, -179);
+                driveTrain.DriveToPoint(toPoint, pos, 0.8);
                 //driveTrain.DriveToPoint(Constants.pickUpSpecimen, pos, 1);
                 if (isStopped && currentStateTimeElapsed > 500) {
                     // done, move to next step
@@ -258,7 +258,7 @@ public class AutoMain extends LinearOpMode {
                 }
             } else if (stepnum == 7) {
                 // go to x400, y260, r-90, continue
-                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 400, 260, AngleUnit.DEGREES, -90);
+                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 810, 260, AngleUnit.DEGREES, -90);
                 driveTrain.DriveToPointGoThrough(toPoint, pos, 1);
                 if (DriveTrain.getDistanceToPoint(toPoint, pos) < 20) {
                     // done, move to next step
@@ -268,9 +268,11 @@ public class AutoMain extends LinearOpMode {
                 }
             } else if (stepnum == 8) {
                 // go to x150, y466, r180, stop & pick up
-                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 150, 466, AngleUnit.DEGREES, 180);
+                Pose2D toPoint = new Pose2D(DistanceUnit.MM, -80, 260, AngleUnit.DEGREES, 180);
                 driveTrain.DriveToPoint(toPoint, pos, 1);
                 if (isStopped && currentStateTimeElapsed > 500) {
+                    driveTrain.Drive(0,0,0,0,0);
+                    sleep(10000);
                     // done, move to next step
                     stepnum++;
                     substepnum = 1;

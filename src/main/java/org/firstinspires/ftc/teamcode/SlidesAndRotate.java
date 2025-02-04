@@ -37,6 +37,7 @@ public class SlidesAndRotate {
     public enum Presets {
         WallPickup(0, 0, entryType.encoder),
         TopSpecimen(2550, 0, entryType.encoder),
+        TopSpecimenXTraHigh(2650, 0, entryType.encoder),
         DropTopSpecimen(1775, 0, entryType.encoder),
         Ascent(0, 0, entryType.encoder);
 
