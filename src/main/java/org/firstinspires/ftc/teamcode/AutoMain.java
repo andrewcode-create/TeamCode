@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -85,10 +86,10 @@ public class AutoMain extends LinearOpMode {
         // init drivetrain
         DriveTrain driveTrain = new DriveTrain();
         driveTrain.init(true,
-                hardwareMap.get(DcMotor.class, "backLeft"),
-                hardwareMap.get(DcMotor.class, "backRight"),
-                hardwareMap.get(DcMotor.class, "frontLeft"),
-                hardwareMap.get(DcMotor.class, "frontRight"));
+                hardwareMap.get(DcMotorEx.class, "backLeft"),
+                hardwareMap.get(DcMotorEx.class, "backRight"),
+                hardwareMap.get(DcMotorEx.class, "frontLeft"),
+                hardwareMap.get(DcMotorEx.class, "frontRight"));
 
         // init claw
         CustomServo claw = new CustomServo(0.7, 0.43);
