@@ -68,6 +68,10 @@ public class DriveTrain {
         //return (2.0/(1+Math.pow(Math.E, -diff*modifier))-1);
     }
 
+    private double transformDriveFast(double diff) {
+        return clamp(transformDrive(diff)*2, -1, 1);
+    }
+
     public static double getDistanceToPoint(Pose2D to, Pose2D bot) {
         return Math.sqrt(
                 (to.getX(DistanceUnit.MM)-bot.getX(DistanceUnit.MM))*(to.getX(DistanceUnit.MM)-bot.getX(DistanceUnit.MM))
@@ -82,8 +86,8 @@ public class DriveTrain {
         DriveFieldCentric(stickX, stickY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
     }
     public void DriveToPointGoThrough(Pose2D to, Pose2D bot, double speed) {
-        double stickY = (to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
-        double stickX = -(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
+        double stickY = transformDriveFast(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
+        double stickX = -transformDriveFast(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
 
         DriveFieldCentric(clamp(stickX, -1, 1), clamp(stickY, -1, 1), to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
     }
