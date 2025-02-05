@@ -22,10 +22,10 @@ public class Constants {
     public static final Pose2D pickUpSpecimen = new Pose2D(DistanceUnit.MM, -10, 600, AngleUnit.DEGREES, 180);
 
     // Autonomous points for high bar
-    public static final Pose2D Drop1 = new Pose2D(DistanceUnit.MM, 810, 1470, AngleUnit.DEGREES, 0);
-    public static final Pose2D Drop2 = new Pose2D(DistanceUnit.MM, 810, 1510, AngleUnit.DEGREES, 0);
-    public static final Pose2D Drop3 = new Pose2D(DistanceUnit.MM, 810, 1560, AngleUnit.DEGREES, 0);
-    public static final Pose2D Drop4 = new Pose2D(DistanceUnit.MM, 810, 1600, AngleUnit.DEGREES, 0);
+    public static final Pose2D Drop1 = new Pose2D(DistanceUnit.MM, 810, 1490, AngleUnit.DEGREES, 0);
+    public static final Pose2D Drop2 = new Pose2D(DistanceUnit.MM, 810, 1530, AngleUnit.DEGREES, 0);
+    public static final Pose2D Drop3 = new Pose2D(DistanceUnit.MM, 810, 1570, AngleUnit.DEGREES, 0);
+    public static final Pose2D Drop4 = new Pose2D(DistanceUnit.MM, 810, 1610, AngleUnit.DEGREES, 0);
     public static final Pose2D Drop5 = new Pose2D(DistanceUnit.MM, 810, 1650, AngleUnit.DEGREES, 0);
 
 
