@@ -29,6 +29,7 @@ public class Constants {
     public static final Pose2D Drop4 = new Pose2D(DistanceUnit.MM, 810, 1610, AngleUnit.DEGREES, 0);
     public static final Pose2D Drop5 = new Pose2D(DistanceUnit.MM, 810, 1650, AngleUnit.DEGREES, 0);
 
+    public static final Pose2D Basket = new Pose2D(DistanceUnit.MM, 500, 3000, AngleUnit.DEGREES, 45);
 
     // Autonomous point for go-around between bar and ground
     public static final Pose2D goBarGround = new Pose2D(DistanceUnit.MM, 670, 1450, AngleUnit.DEGREES, 0);

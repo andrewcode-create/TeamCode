@@ -165,12 +165,12 @@ public class AutoSample extends LinearOpMode {
             boolean isStopped = vel.getX(DistanceUnit.MM) < 0.3 && vel.getY(DistanceUnit.MM) < 0.3 && vel.getHeading(AngleUnit.DEGREES) < 2;
 
             long currentStateTimeElapsed = System.currentTimeMillis() - currentStateStartTime;
-            /*
+
             if (stepnum == 1) {
-                // put on high bar, position 5
+                // put in low basket
                 if (substepnum == 1) {
                     // go to high bar, position 5
-                    driveTrain.DriveToPoint(Constants.Drop5, pos, 0.5);
+                    driveTrain.DriveToPoint(Constants.Basket, pos, 0.5);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.TopSpecimenXTraHigh);
                     if (isStopped && currentStateTimeElapsed > 1000) {
                         currentStateStartTime = System.currentTimeMillis();
@@ -178,11 +178,11 @@ public class AutoSample extends LinearOpMode {
                     }
                 } else if (substepnum == 2) {
                     // lower linear slide
-                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.DropTopSpecimen);
-                    if (currentStateTimeElapsed > 800) {
+                    //slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.DropTopSpecimen);
+                    //if (currentStateTimeElapsed > 800) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
-                    }
+                    //}
                 } else if (substepnum == 3) {
                     // open claw
                     claw.moveToPos(CustomServo.Position.open);
@@ -191,9 +191,9 @@ public class AutoSample extends LinearOpMode {
                         substepnum++;
                     }
                 } else  if (substepnum == 4) {
-                    // go back 160 mm
-                    Pose2D toPoint = new Pose2D(DistanceUnit.MM, Constants.Drop5.getX(DistanceUnit.MM) - 160, Constants.Drop5.getY(DistanceUnit.MM), AngleUnit.DEGREES, Constants.Drop5.getHeading(AngleUnit.DEGREES));
-                    driveTrain.DriveToPointGoThrough(toPoint, pos, 0.6);
+                    // go back to starting pos
+                    Pose2D toPoint = Constants.startingPosAutoSample;
+                    //driveTrain.DriveToPointGoThrough(toPoint, pos, 0.6);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
                     if (DriveTrain.getDistanceToPoint(toPoint, pos) < 20) {
                         currentStateStartTime = System.currentTimeMillis();
@@ -205,7 +205,7 @@ public class AutoSample extends LinearOpMode {
                     substepnum = 1;
                     currentStateStartTime = System.currentTimeMillis();
                 }
-            } else if (stepnum == 2) {
+            } /*else if (stepnum == 2) {
                 // go to x650, y660, r-90, stop
                 Pose2D toPoint = new Pose2D(DistanceUnit.MM, 650, 700, AngleUnit.DEGREES, 0);
                 driveTrain.DriveToPoint(toPoint, pos, 0.9);
