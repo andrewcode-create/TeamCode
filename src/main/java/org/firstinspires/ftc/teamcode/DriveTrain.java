@@ -85,7 +85,7 @@ public class DriveTrain {
         double stickY = (to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
         double stickX = -(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
 
-        DriveFieldCentric(stickX, stickY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
+        DriveFieldCentric(clamp(stickX, -1, 1), clamp(stickY, -1, 1), to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
     }
 
     /*
