@@ -16,6 +16,7 @@ public class Constants {
 
     // starting position of the robot
     public static final Pose2D startingPosAuto = new Pose2D(DistanceUnit.MM, 0, 1355, AngleUnit.DEGREES, 0);
+    public static final Pose2D startingPosAutoSample = new Pose2D(DistanceUnit.MM, 0, 2500, AngleUnit.DEGREES, 90);
     public static final Pose2D startingPosTeleop = new Pose2D(DistanceUnit.MM, 0, 1330, AngleUnit.DEGREES, 0);
 
     // specimen pickup from observation zone
