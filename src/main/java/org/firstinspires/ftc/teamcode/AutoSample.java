@@ -171,7 +171,7 @@ public class AutoSample extends LinearOpMode {
                 if (substepnum == 1) {
                     // go to high bar, position 5
                     driveTrain.DriveToPoint(Constants.Basket, pos, 0.5);
-                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.TopSpecimenXTraHigh);
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.LowBasket);
                     if (isStopped && currentStateTimeElapsed > 1000) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;

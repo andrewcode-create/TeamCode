@@ -39,6 +39,7 @@ public class SlidesAndRotate {
         TopSpecimen(2550, 0, entryType.encoder),
         TopSpecimenXTraHigh(2650, 0, entryType.encoder),
         DropTopSpecimen(1775, 0, entryType.encoder),
+        LowBasket(3900, 0, entryType.encoder),
         Ascent(0, 0, entryType.encoder);
 
         // slide encoder value for the preset
