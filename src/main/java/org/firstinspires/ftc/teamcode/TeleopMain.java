@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import java.util.List;
 import java.util.Locale;
 
-@TeleOp(name = "TeleopMain3")
+@TeleOp(name = "TeleopMain")
 public class TeleopMain extends LinearOpMode {
 
     @Override
@@ -125,6 +125,7 @@ public class TeleopMain extends LinearOpMode {
             // do resetHeading if necessary
             if (currentGamepad1.touchpad || currentGamepad2.touchpad) {
                 telemetry.addLine("RECALIBRATING IMU");
+                driveTrain.Drive(0,0,0,0,0);
                 odo.recalibrateIMU();
                 sleep(500);
             }

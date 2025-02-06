@@ -79,12 +79,30 @@ public class DriveTrain {
                 + (to.getY(DistanceUnit.MM)-bot.getY(DistanceUnit.MM))*(to.getY(DistanceUnit.MM)-bot.getY(DistanceUnit.MM))
         );
     }
+    public static double getDistanceToPointX(Pose2D to, Pose2D bot) {
+        return Math.abs(to.getX(DistanceUnit.MM)-bot.getX(DistanceUnit.MM));
+    }
+    public static double getDistanceToPointY(Pose2D to, Pose2D bot) {
+        return Math.abs(to.getY(DistanceUnit.MM)-bot.getY(DistanceUnit.MM));
+    }
 
     public void DriveToPoint(Pose2D to, Pose2D bot, double speed) {
         double stickY = transformDrive(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
         double stickX = -transformDrive(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
 
         DriveFieldCentric(stickX, stickY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
+    }
+    public void DriveToPointToWall(Pose2D to, Pose2D bot, double speed) {
+        double stickY = transformDrive(1.2*(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM)));
+        double stickX = -transformDrive(1.2*(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM)));
+
+        DriveFieldCentric(stickX, stickY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
+    }
+    public void DriveToPointGoThroughNOSTOP(Pose2D to, Pose2D bot, double speed) {
+        double stickY = clamp(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM), -1, 1);
+        double stickX = -clamp(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM), -1, 1);
+
+        DriveFieldCentric(clamp(stickX, -1, 1), clamp(stickY, -1, 1), to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
     }
     public void DriveToPointGoThrough(Pose2D to, Pose2D bot, double speed) {
         double stickY = transformDriveFast(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));

@@ -23,11 +23,11 @@ public class Constants {
     public static final Pose2D pickUpSpecimen = new Pose2D(DistanceUnit.MM, -10, 600, AngleUnit.DEGREES, 180);
 
     // Autonomous points for high bar
-    public static final Pose2D Drop1 = new Pose2D(DistanceUnit.MM, 810, 1460, AngleUnit.DEGREES, 0);
-    public static final Pose2D Drop2 = new Pose2D(DistanceUnit.MM, 810, 1510, AngleUnit.DEGREES, 0);
-    public static final Pose2D Drop3 = new Pose2D(DistanceUnit.MM, 810, 1560, AngleUnit.DEGREES, 0);
-    public static final Pose2D Drop4 = new Pose2D(DistanceUnit.MM, 810, 1610, AngleUnit.DEGREES, 0);
-    public static final Pose2D Drop5 = new Pose2D(DistanceUnit.MM, 810, 1660, AngleUnit.DEGREES, 0);
+    public static final Pose2D Drop1 = new Pose2D(DistanceUnit.MM, 830, 1264, AngleUnit.DEGREES, 0);
+    public static final Pose2D Drop2 = new Pose2D(DistanceUnit.MM, 830, 1460, AngleUnit.DEGREES, 0);
+    public static final Pose2D Drop3 = new Pose2D(DistanceUnit.MM, 830, 1460, AngleUnit.DEGREES, 0);
+    public static final Pose2D Drop4 = new Pose2D(DistanceUnit.MM, 830, 1560, AngleUnit.DEGREES, 0);
+    public static final Pose2D Drop5 = new Pose2D(DistanceUnit.MM, 830, 1660, AngleUnit.DEGREES, 0);
 
     public static final Pose2D Basket = new Pose2D(DistanceUnit.MM, 500, 3000, AngleUnit.DEGREES, 45);
 
