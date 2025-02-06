@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import java.util.List;
 import java.util.Locale;
 
-@Autonomous(name = "AutoSample")
+@Autonomous(name = "AutoSample", preselectTeleOp="TeleopMain")
 public class AutoSample extends LinearOpMode {
 
     enum state2 {

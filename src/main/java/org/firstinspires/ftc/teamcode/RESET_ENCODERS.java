@@ -34,7 +34,7 @@ public class RESET_ENCODERS extends LinearOpMode {
 
         waitForStart();
         while(opModeIsActive()) {
-            driveTrain.Drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad2.right_stick_x, -gamepad2.right_stick_y, 0.5);
+            driveTrain.DriveNoEncoder(gamepad1.left_stick_x, -gamepad1.left_stick_y, 0.5);
 
             if (gamepad1.square) {
                 telemetry.addLine("Resetting odometry");
@@ -42,6 +42,7 @@ public class RESET_ENCODERS extends LinearOpMode {
                 odo.resetPosAndIMU();
                 sleep(500);
             }
+
             if (gamepad1.triangle) {
                 slidesAndRotate.initSlide(hardwareMap.get(DcMotor.class, "slideLeft"),
                         hardwareMap.get(DcMotor.class, "slideRight"), true);

@@ -62,6 +62,7 @@ public class DriveTrain {
     }
 
     // takes in mm
+    // TODO sqrt() would be better
     private double transformDrive(double diff) {
         final double modifier = 0.0035;
         // see https://www.desmos.com/calculator/ujxklm6xd1
@@ -172,6 +173,13 @@ public class DriveTrain {
         frontRight.setPower(fr);
         backLeft.setPower(bl);
         frontLeft.setPower(fl);
+    }
+
+    public void DriveNoEncoder(double x1, double y1, double speed) {
+        backRight.setPower((y1+x1)*speed);
+        frontRight.setPower((y1+x1)*speed);
+        backLeft.setPower((y1-x1)*speed);
+        frontLeft.setPower((y1-x1)*speed);
     }
 
     public void Drive(double x1, double y1, double x2, double y2, double speed) {
