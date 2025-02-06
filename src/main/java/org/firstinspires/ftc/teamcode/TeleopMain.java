@@ -24,9 +24,9 @@ public class TeleopMain extends LinearOpMode {
         // init slides and rotate
         SlidesAndRotate slidesAndRotate = new SlidesAndRotate(true, true);
         slidesAndRotate.initSlide(hardwareMap.get(DcMotor.class, "slideLeft"),
-                hardwareMap.get(DcMotor.class, "slideRight"));
+                hardwareMap.get(DcMotor.class, "slideRight"), false);
         slidesAndRotate.initRotate(hardwareMap.get(DcMotor.class, "slideRotateLeft"),
-                hardwareMap.get(DcMotor.class, "slideRotateRight"));
+                hardwareMap.get(DcMotor.class, "slideRotateRight"), false);
         SlidesAndRotate.Presets currentPreset = null;
         //String currentPreset2 = "none";
 
@@ -80,13 +80,13 @@ public class TeleopMain extends LinearOpMode {
 
 
 
-        odo.resetPosAndIMU();
-        telemetry.addLine("Waiting for odometer");
-        telemetry.update();
-        sleep(500);
+        //odo.resetPosAndIMU();
+        //telemetry.addLine("Waiting for odometer");
+        //telemetry.update();
+        //sleep(500);
         // set position to starting teleop position and heading
-        odo.setPosition(new Pose2D(DistanceUnit.MM, Constants.startingPosTeleop.getX(DistanceUnit.MM), Constants.startingPosTeleop.getY(DistanceUnit.MM), AngleUnit.RADIANS, Constants.startingPosTeleop.getHeading(AngleUnit.RADIANS)));
-        sleep(20);
+        //odo.setPosition(new Pose2D(DistanceUnit.MM, Constants.startingPosTeleop.getX(DistanceUnit.MM), Constants.startingPosTeleop.getY(DistanceUnit.MM), AngleUnit.RADIANS, Constants.startingPosTeleop.getHeading(AngleUnit.RADIANS)));
+        //sleep(20);
 
 
         // Ready!

@@ -78,9 +78,9 @@ public class AutoMain extends LinearOpMode {
         // init slides and rotate
         SlidesAndRotate slidesAndRotate = new SlidesAndRotate(true, true);
         slidesAndRotate.initSlide(hardwareMap.get(DcMotor.class, "slideLeft"),
-                hardwareMap.get(DcMotor.class, "slideRight"));
+                hardwareMap.get(DcMotor.class, "slideRight"), true);
         slidesAndRotate.initRotate(hardwareMap.get(DcMotor.class, "slideRotateLeft"),
-                hardwareMap.get(DcMotor.class, "slideRotateRight"));
+                hardwareMap.get(DcMotor.class, "slideRotateRight"), true);
         SlidesAndRotate.Presets currentPreset = null;
 
         // init drivetrain

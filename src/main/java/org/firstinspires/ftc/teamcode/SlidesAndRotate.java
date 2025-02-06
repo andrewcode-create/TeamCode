@@ -99,11 +99,13 @@ public class SlidesAndRotate {
         return getAngle((slideRotate.getCurrentPosition() + slideRotate2.getCurrentPosition())/2);
     }
 
-    public void initSlide(DcMotor slideMotor, DcMotor slideMotor2) {
+    public void initSlide(DcMotor slideMotor, DcMotor slideMotor2, boolean RESET_ENCODER) {
         slide = slideMotor;
         slide2 = slideMotor2;
-        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if (RESET_ENCODER) {
+            slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide.setDirection(DcMotor.Direction.FORWARD);
@@ -116,11 +118,13 @@ public class SlidesAndRotate {
             slide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
-    public void initRotate(DcMotor slideRotateMotor, DcMotor slideRotateMotor2) {
+    public void initRotate(DcMotor slideRotateMotor, DcMotor slideRotateMotor2, boolean RESET_ENCODER) {
         slideRotate = slideRotateMotor;
         slideRotate2 = slideRotateMotor2;
-        slideRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slideRotate2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if (RESET_ENCODER) {
+            slideRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            slideRotate2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
         slideRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideRotate2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideRotate.setDirection(DcMotor.Direction.REVERSE);
@@ -132,6 +136,15 @@ public class SlidesAndRotate {
             slideRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideRotate2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
+    }
+
+    public void RotateRaw(double power) {
+        slideRotate.setPower(power);
+        slideRotate2.setPower(power);
+    }
+    public void MoveSlideRaw(double power) {
+        slide.setPower(power);
+        slide2.setPower(power);
     }
 
     public void Rotate(Presets preset, double speed) {
