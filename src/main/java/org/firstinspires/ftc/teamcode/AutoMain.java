@@ -171,7 +171,7 @@ public class AutoMain extends LinearOpMode {
                 // put on high bar, position 5
                 if (substepnum == 1) {
                     // go to high bar, position 5
-                    Pose2D toPoint = Constants.Drop5;
+                    Pose2D toPoint = Constants.Drop1;
                     driveTrain.DriveToPointToWall(toPoint, pos, 0.5);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.TopSpecimenXTraHigh);
                     if (DriveTrain.getDistanceToPoint(toPoint, pos) < 30 && currentStateTimeElapsed > 400) {
@@ -194,7 +194,7 @@ public class AutoMain extends LinearOpMode {
                     }
                 } else  if (substepnum == 4) {
                     // go back 160 mm
-                    Pose2D toPoint = new Pose2D(DistanceUnit.MM, Constants.Drop5.getX(DistanceUnit.MM) - 160, Constants.Drop5.getY(DistanceUnit.MM), AngleUnit.DEGREES, Constants.Drop5.getHeading(AngleUnit.DEGREES));
+                    Pose2D toPoint = new Pose2D(DistanceUnit.MM, Constants.Drop1.getX(DistanceUnit.MM) - 160, Constants.Drop1.getY(DistanceUnit.MM), AngleUnit.DEGREES, Constants.Drop1.getHeading(AngleUnit.DEGREES));
                     driveTrain.DriveToPointGoThrough(toPoint, pos, 0.9);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
                     if (DriveTrain.getDistanceToPoint(toPoint, pos) < 40) {
@@ -305,13 +305,14 @@ public class AutoMain extends LinearOpMode {
                 // this repeats!
                 Pose2D bar = Constants.Drop4;
                 if (stepnum == 11) bar = Constants.Drop3;
-                if (stepnum == 12) bar = Constants.Drop1;
+                if (stepnum == 12) bar = Constants.Drop5;
                 //if (stepnum == 13) bar = Constants.Drop1;
 
                 if (substepnum == 1) {
                     // go to 160 mm behind bar, continue
                     Pose2D toPoint = new Pose2D(DistanceUnit.MM, bar.getX(DistanceUnit.MM) - 160, bar.getY(DistanceUnit.MM), AngleUnit.DEGREES, bar.getHeading(AngleUnit.DEGREES));
-                    driveTrain.DriveToPointGoThroughNOSTOP(toPoint, pos, 0.9);
+                    if (stepnum == 12 && currentStateTimeElapsed < 400) toPoint = new Pose2D(DistanceUnit.MM, bar.getX(DistanceUnit.MM), bar.getY(DistanceUnit.MM), AngleUnit.DEGREES, 90);
+                    driveTrain.DriveToPointGoThrough(toPoint, pos, 0.9);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.TopSpecimen);
                     if (DriveTrain.getDistanceToPoint(toPoint, pos) < 80 && currentStateTimeElapsed > 200) {
                         currentStateStartTime = System.currentTimeMillis();
@@ -319,7 +320,6 @@ public class AutoMain extends LinearOpMode {
                     }
                 } else if (substepnum == 2) {
                     // go to high bar
-                    if (stepnum == 12 && currentStateTimeElapsed < 400) bar = new Pose2D(DistanceUnit.MM, bar.getX(DistanceUnit.MM), bar.getY(DistanceUnit.MM), AngleUnit.DEGREES, 90);
                     driveTrain.DriveToPoint(bar, pos, 0.9);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.TopSpecimen);
                     if (isStopped && currentStateTimeElapsed > 500) {
@@ -343,7 +343,7 @@ public class AutoMain extends LinearOpMode {
                 } else  if (substepnum == 5) {
                     // go back 160 mm
                     Pose2D toPoint = new Pose2D(DistanceUnit.MM, bar.getX(DistanceUnit.MM) - 160, bar.getY(DistanceUnit.MM), AngleUnit.DEGREES, bar.getHeading(AngleUnit.DEGREES));
-                    driveTrain.DriveToPointGoThroughNOSTOP(toPoint, pos, 0.9);
+                    driveTrain.DriveToPointGoThrough(toPoint, pos, 0.9);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
                     if (DriveTrain.getDistanceToPoint(toPoint, pos) < 40) {
                         if (stepnum == 12) {

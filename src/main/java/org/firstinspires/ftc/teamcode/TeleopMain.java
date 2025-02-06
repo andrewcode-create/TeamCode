@@ -123,12 +123,15 @@ public class TeleopMain extends LinearOpMode {
             currentGamepad2.copy(gamepad2);
 
             // do resetHeading if necessary
-            if (currentGamepad1.touchpad || currentGamepad2.touchpad) {
+            /*
+            if (currentGamepad1.touchpad && !previousGamepad1.touchpad || currentGamepad2.touchpad && !previousGamepad2.touchpad) {
                 telemetry.addLine("RECALIBRATING IMU");
+                telemetry.update();
                 driveTrain.Drive(0,0,0,0,0);
+                sleep(1000);
                 odo.recalibrateIMU();
                 sleep(500);
-            }
+            }*/
 
             // do sync if necessary
             if (currentGamepad1.left_stick_button && currentGamepad1.right_stick_button || currentGamepad2.left_stick_button && currentGamepad2.right_stick_button) {
@@ -157,6 +160,8 @@ public class TeleopMain extends LinearOpMode {
             } else if (currentGamepad2.b && !previousGamepad2.b) {
                 //currentPreset2 = "TopSpecimen";
                 currentPreset = SlidesAndRotate.Presets.TopSpecimen;
+            } else if (currentGamepad2.square && !previousGamepad2.square) {
+                currentPreset = SlidesAndRotate.Presets.Middle;
             } else if (currentGamepad1.guide && !previousGamepad1.guide || currentGamepad2.guide && !previousGamepad2.guide) {
                 currentPreset = SlidesAndRotate.Presets.Ascent;
                 //currentPreset2 = "Ascent";
