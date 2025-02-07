@@ -54,6 +54,8 @@ public class RESET_ENCODERS extends LinearOpMode {
             if (startedSlides) {
                 slidesAndRotate.RotateRaw(0.5*(gamepad1.left_trigger - gamepad1.right_trigger));
                 slidesAndRotate.MoveSlideRaw(0.6*((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0)));
+                telemetry.addData("Slides encoders", slidesAndRotate.slide);
+                telemetry.addData("SlideRotate angle", slidesAndRotate.getAngle());
             }
 
             Pose2D pos = odo.getPosition();
