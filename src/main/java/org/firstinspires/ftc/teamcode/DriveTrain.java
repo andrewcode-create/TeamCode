@@ -94,14 +94,14 @@ public class DriveTrain {
         return Math.abs(to.getY(DistanceUnit.MM)-bot.getY(DistanceUnit.MM));
     }
 
-    public void DriveToPointSqrt(Pose2D to, Pose2D bot, double speed) {
+    public void DriveToPoint(Pose2D to, Pose2D bot, double speed) {
         double stickY = transformDriveSqrt(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
         double stickX = -transformDriveSqrt(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
 
         DriveFieldCentric(stickX, stickY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
     }
 
-    public void DriveToPoint(Pose2D to, Pose2D bot, double speed) {
+    public void DriveToPointOld(Pose2D to, Pose2D bot, double speed) {
         double stickY = transformDrive(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
         double stickX = -transformDrive(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
 
@@ -113,13 +113,13 @@ public class DriveTrain {
 
         DriveFieldCentric(stickX, stickY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
     }
-    public void DriveToPointGoThroughNOSTOP(Pose2D to, Pose2D bot, double speed) {
-        double stickY = clamp(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM), -1, 1);
-        double stickX = -clamp(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM), -1, 1);
+    public void DriveToPointGoThrough(Pose2D to, Pose2D bot, double speed) {
+        double stickY = transformDriveSqrt(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
+        double stickX = -transformDriveSqrt(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
 
         DriveFieldCentric(clamp(stickX, -1, 1), clamp(stickY, -1, 1), to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
     }
-    public void DriveToPointGoThrough(Pose2D to, Pose2D bot, double speed) {
+    public void DriveToPointGoThroughOld(Pose2D to, Pose2D bot, double speed) {
         double stickY = transformDriveFast(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
         double stickX = -transformDriveFast(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
 

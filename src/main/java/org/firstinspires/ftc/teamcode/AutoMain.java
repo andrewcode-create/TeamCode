@@ -290,9 +290,11 @@ public class AutoMain extends LinearOpMode {
                     }
                 } else {
                     // go forward a bit to not bring sample with us
-                    driveTrain.DriveFieldCentric(0, 1, Math.PI, pos.getHeading(AngleUnit.RADIANS), 0.9, null);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.TopSpecimen);
-                    if (currentStateTimeElapsed > 250) {
+                    if (currentStateTimeElapsed > 100) {
+                        driveTrain.DriveFieldCentric(0, 1, Math.PI, pos.getHeading(AngleUnit.RADIANS), 0.9, null);
+                    }
+                    if (currentStateTimeElapsed > 300) {
                         stepnum++;
                         substepnum = 1;
                         currentStateStartTime = System.currentTimeMillis();
@@ -330,7 +332,7 @@ public class AutoMain extends LinearOpMode {
                     // lower linear slide
                     driveTrain.DriveFieldCentric(0, 1, 0, pos.getHeading(AngleUnit.RADIANS), 0.1, null);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.DropTopSpecimen);
-                    if (currentStateTimeElapsed > 450) {
+                    if (currentStateTimeElapsed > 500) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
                     }
@@ -371,6 +373,9 @@ public class AutoMain extends LinearOpMode {
                     driveTrain.DriveFieldCentric(0,-0.2,Math.PI,pos.getHeading(AngleUnit.RADIANS),1, null);
                     claw.moveToPos(CustomServo.Position.close);
                     if (currentStateTimeElapsed > 300) {
+                        slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.TopSpecimen);
+                    }
+                    if (currentStateTimeElapsed > 400) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
                     }
@@ -383,6 +388,7 @@ public class AutoMain extends LinearOpMode {
             } else {
                 // done
                 Pose2D toPoint = new Pose2D(DistanceUnit.MM, 0, 400, AngleUnit.DEGREES, 0);
+                driveTrain.DriveToPoint(toPoint, pos, 0.9);
                 slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
             }
 
