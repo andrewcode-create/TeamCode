@@ -70,6 +70,13 @@ public class DriveTrain {
         //return (2.0/(1+Math.pow(Math.E, -diff*modifier))-1);
     }
 
+    private double transformDriveSqrt(double diff) {
+        final double modifier = 0.0035;
+        // see https://www.desmos.com/calculator/ujxklm6xd1
+        return clamp(modifier*10*Math.sqrt(Math.abs(diff))*(diff < 0 ? -1 : 1), -1, 1);
+        //return (2.0/(1+Math.pow(Math.E, -diff*modifier))-1);
+    }
+
     private double transformDriveFast(double diff) {
         return clamp(transformDrive(diff)*2, -1, 1);
     }
@@ -85,6 +92,13 @@ public class DriveTrain {
     }
     public static double getDistanceToPointY(Pose2D to, Pose2D bot) {
         return Math.abs(to.getY(DistanceUnit.MM)-bot.getY(DistanceUnit.MM));
+    }
+
+    public void DriveToPointSqrt(Pose2D to, Pose2D bot, double speed) {
+        double stickY = transformDriveSqrt(to.getX(DistanceUnit.MM) - bot.getX(DistanceUnit.MM));
+        double stickX = -transformDriveSqrt(to.getY(DistanceUnit.MM) - bot.getY(DistanceUnit.MM));
+
+        DriveFieldCentric(stickX, stickY, to.getHeading(AngleUnit.RADIANS), bot.getHeading(AngleUnit.RADIANS), speed, null);
     }
 
     public void DriveToPoint(Pose2D to, Pose2D bot, double speed) {
