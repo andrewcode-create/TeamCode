@@ -42,7 +42,8 @@ public class SlidesAndRotate {
         Middle(1750, 2300, entryType.encoder),
         LowBasket(3900, 0, entryType.encoder),
         Ascent(0, 0, entryType.encoder),
-        FloorPickup(1300, 2600, entryType.encoder);
+        FloorPickup(1300, 2600, entryType.encoder),
+        ParkSample(600, 0, entryType.encoder);
 
         // slide encoder value for the preset
         public final int slideEncoder;
