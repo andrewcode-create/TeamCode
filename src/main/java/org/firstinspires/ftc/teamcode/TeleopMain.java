@@ -139,7 +139,7 @@ public class TeleopMain extends LinearOpMode {
             }*/
 
             // do sync if necessary
-            if (currentGamepad1.left_stick_button && currentGamepad1.right_stick_button || currentGamepad2.left_stick_button && currentGamepad2.right_stick_button) {
+            if (currentGamepad1.right_stick_button && !previousGamepad1.right_stick_button || currentGamepad2.right_stick_button && !previousGamepad2.right_stick_button) {
                 telemetry.addLine("SYNCING FOR 1 SECOND!!!");
                 telemetry.update();
                 // THIS WILL BLOCK FOR 1 SECOND!!!!
@@ -190,11 +190,12 @@ public class TeleopMain extends LinearOpMode {
 
 
             if (currentGamepad1.left_stick_x != 0 || currentGamepad1.right_stick_x != 0 || currentGamepad1.left_stick_y != 0 || currentGamepad1.triangle || currentGamepad1.cross || currentGamepad1.circle || currentGamepad1.square) {
+                double shift = currentGamepad1.right_stick_button ? Math.PI/4 : 0;
                 // gamepad 1 driving
-                if (currentGamepad1.square) r=Math.PI/2;
-                else if (currentGamepad1.triangle) r=0;
-                else if (currentGamepad1.circle) r=-Math.PI/2;
-                else if (currentGamepad1.cross) r=Math.PI;
+                if (currentGamepad1.square) r=Math.PI/2 + shift;
+                else if (currentGamepad1.triangle) r=shift;
+                else if (currentGamepad1.circle) r=-Math.PI/2 + shift;
+                else if (currentGamepad1.cross) r=Math.PI + shift;
                 else r = pos.getHeading(AngleUnit.RADIANS) + (-Math.PI / 2.0)/2*currentGamepad1.right_stick_x;
                 driveTrain.DriveFieldCentric(currentGamepad1.left_stick_x, -currentGamepad1.left_stick_y, r, pos.getHeading(AngleUnit.RADIANS), speed, telemetry);
             } else {
