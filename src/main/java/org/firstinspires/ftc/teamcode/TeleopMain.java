@@ -285,7 +285,7 @@ public class TeleopMain extends LinearOpMode {
             telemetry.addData("ClawRotate", clawRotate.getRawPosition());
             telemetry.addData("NEWWWW", true);
             telemetry.update();
-            
+
         }
     }
 

@@ -135,6 +135,31 @@ public class DriveTrain {
     }
     */
 
+    public void DriveNoEncoder(double axial, double lateral, double yaw, double speed) {
+        double max;
+
+        double leftFrontPower  = axial + lateral + yaw;
+        double rightFrontPower = axial - lateral - yaw;
+        double leftBackPower   = axial - lateral + yaw;
+        double rightBackPower  = axial + lateral - yaw;
+
+        max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower  /= max;
+            rightFrontPower /= max;
+            leftBackPower   /= max;
+            rightBackPower  /= max;
+        }
+
+        backRight.setPower(speed*rightBackPower);
+        frontRight.setPower(speed*rightFrontPower);
+        backLeft.setPower(speed*leftBackPower);
+        frontLeft.setPower(speed*leftFrontPower);
+    }
+
     // go to angle of turnX and turnY from current angle
     public void DriveFieldCentric(double driveX, double driveY, double toAngle, double botHeading, double speed, Telemetry telemetry) {
         // rotate the drive constants
@@ -187,13 +212,6 @@ public class DriveTrain {
         frontRight.setPower(fr);
         backLeft.setPower(bl);
         frontLeft.setPower(fl);
-    }
-
-    public void DriveNoEncoder(double x1, double y1, double speed) {
-        backRight.setPower((y1+x1)*speed);
-        frontRight.setPower((y1+x1)*speed);
-        backLeft.setPower((y1-x1)*speed);
-        frontLeft.setPower((y1-x1)*speed);
     }
 
     public void Drive(double x1, double y1, double x2, double y2, double speed) {

@@ -34,7 +34,7 @@ public class RESET_ENCODERS extends LinearOpMode {
 
         waitForStart();
         while(opModeIsActive()) {
-            driveTrain.DriveNoEncoder(gamepad1.left_stick_x, -gamepad1.left_stick_y, 0.5);
+            driveTrain.DriveNoEncoder(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, 0.5);
 
             if (gamepad1.square) {
                 telemetry.addLine("Resetting odometry");
@@ -60,6 +60,7 @@ public class RESET_ENCODERS extends LinearOpMode {
 
             Pose2D pos = odo.getPosition();
             String data = String.format(Locale.US, "{X: %.1f, Y: %.1f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
+            telemetry.addLine("Only gamepad 1 works");
             telemetry.addData("odo", data);
             telemetry.addLine("Use square button to reset odometry");
             telemetry.addLine("Use triangle button to" + (startedSlides ? "RESET" : "ENABLE") + "slides and slideRotate");
