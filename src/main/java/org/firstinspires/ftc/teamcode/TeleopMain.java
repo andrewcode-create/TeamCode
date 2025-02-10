@@ -41,7 +41,7 @@ public class TeleopMain extends LinearOpMode {
         // init claw
         CustomServo claw = new CustomServo(0.7, 0.42);
         CustomServo clawRotate = new CustomServo(0, 1, 0.475, 0.008);
-        claw.init(hardwareMap.get(Servo.class, "claw"), CustomServo.Position.close);
+        claw.init(hardwareMap.get(Servo.class, "claw"), CustomServo.Position.none);
         clawRotate.init(hardwareMap.get(Servo.class, "clawRotate"), CustomServo.Position.mid);
 
         // set manual sensor caching
@@ -92,10 +92,12 @@ public class TeleopMain extends LinearOpMode {
         // Ready!
         telemetry.addLine("Ready to play, everything initialized.");
         telemetry.update();
-        waitForStart();
-        odo.update();
 
+        waitForStart();
+
+        odo.update();
         Pose2D pos = odo.getPosition();
+        claw.moveToPos(CustomServo.Position.close);
 
         double lastR = pos.getHeading(AngleUnit.RADIANS);
 
