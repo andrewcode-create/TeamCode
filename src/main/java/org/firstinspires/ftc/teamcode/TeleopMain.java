@@ -151,25 +151,15 @@ public class TeleopMain extends LinearOpMode {
             // change presets if needed
             if (currentGamepad1.left_trigger!=0 || currentGamepad1.right_trigger!=0 || currentGamepad1.dpad_up || currentGamepad1.dpad_down ||
                     currentGamepad2.left_trigger!=0 || currentGamepad2.right_trigger!=0 || currentGamepad2.dpad_up || currentGamepad2.dpad_down){
-                //currentPreset2 = "none";
                 currentPreset = null;
-            } else if ( currentGamepad2.a && !previousGamepad2.a) {/*
-                telemetry.addLine("PRESSED A");
-                telemetry.update();
-                sleep(1000);*/
-                //currentPreset2 = "WallPickup";
-                currentPreset = SlidesAndRotate.Presets.WallPickup;/*
-                telemetry.addLine("Set preset");
-                telemetry.update();
-                sleep(1000);*/
+            } else if ( currentGamepad2.a && !previousGamepad2.a) {
+                currentPreset = SlidesAndRotate.Presets.WallPickup;
             } else if (currentGamepad2.b && !previousGamepad2.b) {
-                //currentPreset2 = "TopSpecimen";
                 currentPreset = SlidesAndRotate.Presets.TopSpecimen;
             } else if (currentGamepad2.square && !previousGamepad2.square) {
                 currentPreset = SlidesAndRotate.Presets.Middle;
             } else if (currentGamepad1.guide && !previousGamepad1.guide || currentGamepad2.guide && !previousGamepad2.guide) {
                 currentPreset = SlidesAndRotate.Presets.Ascent;
-                //currentPreset2 = "Ascent";
             }
 
             // do slide rotation and extension
@@ -177,16 +167,8 @@ public class TeleopMain extends LinearOpMode {
                 slidesAndRotate.Rotate(currentGamepad1.left_trigger - currentGamepad1.right_trigger + currentGamepad2.left_trigger - currentGamepad2.right_trigger);
                 slidesAndRotate.MoveSlide((currentGamepad1.dpad_up || currentGamepad2.dpad_up) ? 0.8 : 0 + ((currentGamepad1.dpad_down || currentGamepad2.dpad_down) ? -0.8 : 0));
             } else {
-                //telemetry.addLine("going into function MoveSlideTMP");
-                //telemetry.update();
-                //sleep(1000);
                 slidesAndRotate.MoveSlide(currentPreset);
                 slidesAndRotate.Rotate(currentPreset);
-
-                /*
-                slidesAndRotate.Rotate(currentPreset);
-                slidesAndRotate.MoveSlide(currentPreset);
-                */
             }
 
             // Do the drivetrain. Left bumper is slow mode, right bumper is reverse the robot (does it work?).
@@ -269,12 +251,7 @@ public class TeleopMain extends LinearOpMode {
             telemetry.addData("r (degrees)", r*180/Math.PI);
 
 
-
-            //double r = (currentGamepad1.right_stick_x > 0 ? -1 : 1)*(Math.PI*0.5 + Math.atan(-currentGamepad1.right_stick_y / (currentGamepad1.right_stick_x == 0 ? 0.001 : currentGamepad1.right_stick_x)));
-
-
-
-            // claw
+            // claw open and close
             if ((currentGamepad1.dpad_right && !previousGamepad1.dpad_right) || (currentGamepad2.triangle && !previousGamepad2.triangle)) {
                 if (claw.getPosition() != CustomServo.Position.close) {
                     claw.moveToPos(CustomServo.Position.close);
@@ -283,6 +260,7 @@ public class TeleopMain extends LinearOpMode {
                 }
             }
 
+            // claw mid
             if (currentGamepad1.dpad_left && !currentGamepad1.dpad_up && !currentGamepad1.dpad_down ||
                     currentGamepad2.dpad_left && !currentGamepad2.dpad_up && !currentGamepad2.dpad_down) {
                 if (claw.getPosition() != CustomServo.Position.mid) {
@@ -307,8 +285,7 @@ public class TeleopMain extends LinearOpMode {
             telemetry.addData("ClawRotate", clawRotate.getRawPosition());
             telemetry.addData("NEWWWW", true);
             telemetry.update();
-
-
+            
         }
     }
 
