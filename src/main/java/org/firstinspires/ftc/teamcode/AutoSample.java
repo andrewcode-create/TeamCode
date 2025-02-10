@@ -174,6 +174,7 @@ public class AutoSample extends LinearOpMode {
                     Pose2D toPoint = Constants.Basket;
                     driveTrain.DriveToPoint(toPoint, pos, 0.5);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.LowBasket);
+                    slidesAndRotate.Rotate(SlidesAndRotate.Presets.LowBasket);
                     if (DriveTrain.getDistanceToPoint(toPoint, pos) < 30 && currentStateTimeElapsed > 2000) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
@@ -181,6 +182,7 @@ public class AutoSample extends LinearOpMode {
                 } else if (substepnum == 2) {
                     // open claw
                     claw.moveToPos(CustomServo.Position.open);
+                    driveTrain.Drive(0,0,0,0,0);
                     if (currentStateTimeElapsed > 2000) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
@@ -193,7 +195,7 @@ public class AutoSample extends LinearOpMode {
                 }
             } else if (stepnum == 2) {
                 // go to first on ground
-                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 570, 4100, AngleUnit.DEGREES, 0);
+                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 550, 4100, AngleUnit.DEGREES, 0);
                 driveTrain.DriveToPoint(toPoint, pos, 0.6);
                 slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
                 slidesAndRotate.Rotate(SlidesAndRotate.Presets.WallPickup);
@@ -208,6 +210,7 @@ public class AutoSample extends LinearOpMode {
                     // pick up first on ground
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.FloorPickup);
                     slidesAndRotate.Rotate(SlidesAndRotate.Presets.FloorPickup);
+                    driveTrain.Drive(0,0,0,0,0);
                     if (currentStateTimeElapsed > 5000) {
                         // done, move to next step
                         substepnum++;
@@ -216,6 +219,7 @@ public class AutoSample extends LinearOpMode {
                 } else {
                     // close claw
                     claw.moveToPos(CustomServo.Position.close);
+                    driveTrain.Drive(0,0,0,0,0);
                     if (currentStateTimeElapsed > 2000) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum = 1;
@@ -229,7 +233,7 @@ public class AutoSample extends LinearOpMode {
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.LowBasket);
                     slidesAndRotate.Rotate(SlidesAndRotate.Presets.LowBasket);
                     Pose2D toPoint = Constants.Basket;
-                    driveTrain.DriveToPoint(toPoint, pos, 0.6);
+                    if (currentStateTimeElapsed > 2000) driveTrain.DriveToPoint(toPoint, pos, 0.6);
                     if (DriveTrain.getDistanceToPoint(toPoint, pos) < 30 && currentStateTimeElapsed > 5000) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
@@ -237,6 +241,7 @@ public class AutoSample extends LinearOpMode {
                 } else if (substepnum == 2) {
                     // open claw
                     claw.moveToPos(CustomServo.Position.open);
+                    driveTrain.Drive(0,0,0,0,0);
                     if (currentStateTimeElapsed > 2000) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
@@ -249,7 +254,7 @@ public class AutoSample extends LinearOpMode {
                 }
             } else if (stepnum == 5) {
                 // go to second on ground
-                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 590, 4360, AngleUnit.DEGREES, 0);
+                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 550, 4360, AngleUnit.DEGREES, 0);
                 driveTrain.DriveToPoint(toPoint, pos, 0.9);
                 slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
                 slidesAndRotate.Rotate(SlidesAndRotate.Presets.WallPickup);
@@ -264,6 +269,7 @@ public class AutoSample extends LinearOpMode {
                     // pick up second on ground
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.FloorPickup);
                     slidesAndRotate.Rotate(SlidesAndRotate.Presets.FloorPickup);
+                    driveTrain.Drive(0,0,0,0,0);
                     if (currentStateTimeElapsed > 5000) {
                         // done, move to next step
                         substepnum++;
@@ -272,6 +278,7 @@ public class AutoSample extends LinearOpMode {
                 } else {
                     // close claw
                     claw.moveToPos(CustomServo.Position.close);
+                    driveTrain.Drive(0,0,0,0,0);
                     if (currentStateTimeElapsed > 2000) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum = 1;
@@ -285,14 +292,15 @@ public class AutoSample extends LinearOpMode {
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.LowBasket);
                     slidesAndRotate.Rotate(SlidesAndRotate.Presets.LowBasket);
                     Pose2D toPoint = Constants.Basket;
-                    driveTrain.DriveToPoint(toPoint, pos, 0.6);
-                    if (DriveTrain.getDistanceToPoint(toPoint, pos) < 30 && currentStateTimeElapsed > 5000) {
+                    if (currentStateTimeElapsed > 2000) driveTrain.DriveToPoint(toPoint, pos, 0.5);
+                    if (DriveTrain.getDistanceToPoint(toPoint, pos) < 30 && currentStateTimeElapsed > 12000) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
                     }
                 } else if (substepnum == 2) {
                     // open claw
                     claw.moveToPos(CustomServo.Position.open);
+                    driveTrain.Drive(0,0,0,0,0);
                     if (currentStateTimeElapsed > 2000) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
