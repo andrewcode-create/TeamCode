@@ -16,7 +16,7 @@ public class Constants {
 
     // starting position of the robot
     public static final Pose2D startingPosAuto = new Pose2D(DistanceUnit.MM, 0, 1355, AngleUnit.DEGREES, 0);
-    public static final Pose2D startingPosAutoSample = new Pose2D(DistanceUnit.MM, 0, 2500, AngleUnit.DEGREES, 90);
+    public static final Pose2D startingPosAutoSample = new Pose2D(DistanceUnit.MM, 0, 3727, AngleUnit.DEGREES, 0);
     public static final Pose2D startingPosTeleop = new Pose2D(DistanceUnit.MM, 0, 1330, AngleUnit.DEGREES, 0);
 
     // specimen pickup from observation zone
@@ -29,7 +29,7 @@ public class Constants {
     public static final Pose2D Drop4 = new Pose2D(DistanceUnit.MM, 830, 1560, AngleUnit.DEGREES, 0);
     public static final Pose2D Drop5 = new Pose2D(DistanceUnit.MM, 830, 1660, AngleUnit.DEGREES, 0);
 
-    public static final Pose2D Basket = new Pose2D(DistanceUnit.MM, 500, 3000, AngleUnit.DEGREES, 45);
+    public static final Pose2D Basket = new Pose2D(DistanceUnit.MM, 232, 4520, AngleUnit.DEGREES, 135);
 
     // Autonomous point for go-around between bar and ground
     public static final Pose2D goBarGround = new Pose2D(DistanceUnit.MM, 670, 1450, AngleUnit.DEGREES, 0);

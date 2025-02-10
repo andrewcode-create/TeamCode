@@ -193,8 +193,8 @@ public class AutoSample extends LinearOpMode {
                 }
             } else if (stepnum == 2) {
                 // go to first on ground
-                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 650, 2000, AngleUnit.DEGREES, 0);
-                driveTrain.DriveToPoint(toPoint, pos, 0.9);
+                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 570, 4100, AngleUnit.DEGREES, 0);
+                driveTrain.DriveToPoint(toPoint, pos, 0.6);
                 slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
                 slidesAndRotate.Rotate(SlidesAndRotate.Presets.WallPickup);
                 if (DriveTrain.getDistanceToPoint(toPoint, pos) < 20 && currentStateTimeElapsed > 500) {
@@ -249,7 +249,7 @@ public class AutoSample extends LinearOpMode {
                 }
             } else if (stepnum == 5) {
                 // go to second on ground
-                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 650, 2300, AngleUnit.DEGREES, 0);
+                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 590, 4360, AngleUnit.DEGREES, 0);
                 driveTrain.DriveToPoint(toPoint, pos, 0.9);
                 slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
                 slidesAndRotate.Rotate(SlidesAndRotate.Presets.WallPickup);
@@ -307,7 +307,7 @@ public class AutoSample extends LinearOpMode {
                 // go to x800, y3000, h180 through x800, y2500, h180 to push third into sample area.
                 // then go to x200 y3000 h180
                 if (substepnum == 1) {
-                    Pose2D toPoint = new Pose2D(DistanceUnit.MM, 800, 2500, AngleUnit.DEGREES, 180);
+                    Pose2D toPoint = new Pose2D(DistanceUnit.MM, 800, 4380, AngleUnit.DEGREES, 180);
                     driveTrain.DriveToPoint(toPoint, pos, 0.6);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
                     slidesAndRotate.Rotate(SlidesAndRotate.Presets.WallPickup);
@@ -316,7 +316,7 @@ public class AutoSample extends LinearOpMode {
                         currentStateStartTime = System.currentTimeMillis();
                     }
                 } else if (substepnum == 2) {
-                    Pose2D toPoint = new Pose2D(DistanceUnit.MM, 800, 3000, AngleUnit.DEGREES, 180);
+                    Pose2D toPoint = new Pose2D(DistanceUnit.MM, 1267, 4650, AngleUnit.DEGREES, 180);
                     driveTrain.DriveToPoint(toPoint, pos, 0.6);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
                     slidesAndRotate.Rotate(SlidesAndRotate.Presets.WallPickup);
@@ -325,7 +325,7 @@ public class AutoSample extends LinearOpMode {
                         currentStateStartTime = System.currentTimeMillis();
                     }
                 } else if (substepnum == 3) {
-                    Pose2D toPoint = new Pose2D(DistanceUnit.MM, 200, 3000, AngleUnit.DEGREES, 180);
+                    Pose2D toPoint = new Pose2D(DistanceUnit.MM, 270, 4650, AngleUnit.DEGREES, 180);
                     driveTrain.DriveToPoint(toPoint, pos, 0.6);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
                     slidesAndRotate.Rotate(SlidesAndRotate.Presets.WallPickup);
@@ -341,7 +341,7 @@ public class AutoSample extends LinearOpMode {
                 }
             } else {
                 // Park
-                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 800, 2000, AngleUnit.DEGREES, -90);
+                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 800, 3530, AngleUnit.DEGREES, -90);
                 driveTrain.DriveToPoint(toPoint, pos, 0.6);
                 slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.ParkSample);
                 slidesAndRotate.Rotate(SlidesAndRotate.Presets.ParkSample);

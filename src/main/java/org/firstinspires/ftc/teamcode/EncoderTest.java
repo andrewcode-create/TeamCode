@@ -82,7 +82,7 @@ public class EncoderTest extends LinearOpMode {
         telemetry.update();
         sleep(500);
         // set position to starting teleop position and heading
-        odo.setPosition(new Pose2D(DistanceUnit.MM, Constants.startingPosTeleop.getX(DistanceUnit.MM), Constants.startingPosTeleop.getY(DistanceUnit.MM), AngleUnit.RADIANS, Constants.startingPosTeleop.getHeading(AngleUnit.RADIANS)));
+        odo.setPosition(Constants.startingPosAutoSample);
         sleep(20);
 
 
