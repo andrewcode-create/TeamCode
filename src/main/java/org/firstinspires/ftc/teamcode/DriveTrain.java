@@ -232,4 +232,73 @@ public class DriveTrain {
         backLeft.setPower(bl);
         frontLeft.setPower(fl);
     }
+
+
+
+    private final double momentOfInertia = 1.0; // Adjustable turning inertia
+    private final double maxSpeed = 1.0; // Maximum wheel speed
+    private final double linearInertia = 0.1; // Adjustable inertia for movement
+
+    public enum TurnMode {
+        CLOCKWISE, COUNTERCLOCKWISE, SHORTEST
+    }
+
+    public void goToPointSmooth(Pose2D toPoint, Pose2D pos, TurnMode turnMode, double endVelocity) {
+
+
+        double targetX = toPoint.getX(DistanceUnit.MM);
+        double targetY = toPoint.getY(DistanceUnit.MM);
+        double targetAngle = toPoint.getHeading(AngleUnit.DEGREES);
+        double currentX = pos.getX(DistanceUnit.MM);
+        double currentY = pos.getY(DistanceUnit.MM);
+        double currentAngle = pos.getHeading(AngleUnit.DEGREES);
+
+
+        double deltaX = targetX - currentX;
+        double deltaY = targetY - currentY;
+        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+        /*
+        if (distance < stoppingThreshold) {
+            stopMotors();
+            return;
+        }*/
+
+        double targetDirection = Math.toDegrees(Math.atan2(deltaY, deltaX));
+        double movementError = normalizeAngle(targetDirection - currentAngle);
+
+        double speed = Math.min(distance * linearInertia + endVelocity, maxSpeed);
+
+        double turnError = normalizeAngle(targetAngle - currentAngle);
+        if (turnMode == TurnMode.CLOCKWISE && turnError > 0) turnError -= 360;
+        if (turnMode == TurnMode.COUNTERCLOCKWISE && turnError < 0) turnError += 360;
+        if (turnMode == TurnMode.SHORTEST) {
+            if (turnError > 180) turnError -= 360;
+            if (turnError < -180) turnError += 360;
+        }
+
+        double turnSpeed = (1 - Math.exp(-Math.abs(turnError) / 90)) * momentOfInertia * Math.signum(turnError);
+
+        double strafeX = Math.cos(Math.toRadians(targetDirection)) * speed;
+        double strafeY = Math.sin(Math.toRadians(targetDirection)) * speed;
+
+        // Omni-wheel kinematics
+        frontLeft.setPower(Math.max(0, Math.min(1, strafeX - strafeY - turnSpeed)));
+        frontRight.setPower(Math.max(0, Math.min(1, strafeX + strafeY + turnSpeed)));
+        backLeft.setPower(Math.max(0, Math.min(1, -strafeX + strafeY - turnSpeed)));
+        backRight.setPower(Math.max(0, Math.min(1, -strafeX - strafeY + turnSpeed)));
+    }
+
+    public void stopMotors() {
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+    }
+
+    private double normalizeAngle(double angle) {
+        while (angle > 180) angle -= 360;
+        while (angle < -180) angle += 360;
+        return angle;
+    }
 }
