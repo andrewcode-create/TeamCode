@@ -92,8 +92,8 @@ public class AutoMain extends LinearOpMode {
                 hardwareMap.get(DcMotorEx.class, "frontRight"));
 
         // init claw
-        CustomServo claw = new CustomServo(0.7, 0.43);
-        CustomServo clawRotate = new CustomServo(0, 1, 0.475, 0.004);
+        CustomServo claw = new CustomServo(0.7, 0.42, 0.54);
+        CustomServo clawRotate = new CustomServo(0, 1, 0.475, 0.012);
         claw.init(hardwareMap.get(Servo.class, "claw"), CustomServo.Position.close);
         clawRotate.init(hardwareMap.get(Servo.class, "clawRotate"), CustomServo.Position.mid);
 
@@ -130,6 +130,7 @@ public class AutoMain extends LinearOpMode {
         waitForStart();
         telemetry.addLine("Started");
         telemetry.update();
+        odo.setPosition(Constants.startingPosAuto);
 
         long LastFrameTime = System.currentTimeMillis();
         long currentStateStartTime = System.currentTimeMillis();
@@ -181,7 +182,7 @@ public class AutoMain extends LinearOpMode {
                 } else if (substepnum == 2) {
                     // lower linear slide
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.DropTopSpecimen);
-                    if (currentStateTimeElapsed > 500) {
+                    if (currentStateTimeElapsed > 600) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
                     }
@@ -211,7 +212,7 @@ public class AutoMain extends LinearOpMode {
                 // go to x650, y660, r-90, stop
                 Pose2D toPoint = new Pose2D(DistanceUnit.MM, 650, 750, AngleUnit.DEGREES, 0);
                 driveTrain.DriveToPointGoThrough(toPoint, pos, 0.9);
-                if (DriveTrain.getDistanceToPoint(toPoint, pos) < 40 && currentStateTimeElapsed > 500) {
+                if (DriveTrain.getDistanceToPoint(toPoint, pos) < 80 && currentStateTimeElapsed > 500) {
                     // done, move to next step
                     stepnum++;
                     substepnum = 1;
@@ -219,9 +220,9 @@ public class AutoMain extends LinearOpMode {
                 }
             } else if (stepnum == 3) {
                 // go to x810, y910, r-90, stop
-                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 770, 550, AngleUnit.DEGREES, -90);
+                Pose2D toPoint = new Pose2D(DistanceUnit.MM, 770, 650, AngleUnit.DEGREES, -90);
                 driveTrain.DriveToPointGoThrough(toPoint, pos, 0.9);
-                if (DriveTrain.getDistanceToPoint(toPoint, pos) < 20 && currentStateTimeElapsed > 500) {
+                if (DriveTrain.getDistanceToPoint(toPoint, pos) < 30 && currentStateTimeElapsed > 500) {
                     // done, move to next step
                     stepnum++;
                     substepnum = 1;
@@ -251,7 +252,7 @@ public class AutoMain extends LinearOpMode {
                 // go to x810, y250, r-90, stop
                 Pose2D toPoint = new Pose2D(DistanceUnit.MM, 770, 550, AngleUnit.DEGREES, -90);
                 driveTrain.DriveToPointGoThrough(toPoint, pos, 0.9);
-                if (DriveTrain.getDistanceToPoint(toPoint, pos) < 20 && currentStateTimeElapsed > 500) {
+                if (DriveTrain.getDistanceToPoint(toPoint, pos) < 30 && currentStateTimeElapsed > 500) {
                     // done, move to next step
                     stepnum++;
                     substepnum = 1;
@@ -332,7 +333,7 @@ public class AutoMain extends LinearOpMode {
                     // lower linear slide
                     driveTrain.DriveFieldCentric(0, 1, 0, pos.getHeading(AngleUnit.RADIANS), 0.1, null);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.DropTopSpecimen);
-                    if (currentStateTimeElapsed > 500) {
+                    if (currentStateTimeElapsed > 600) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
                     }
@@ -360,15 +361,29 @@ public class AutoMain extends LinearOpMode {
                         }
                     }
                 } else if (substepnum == 6) {
-                    // go to pick up
-                    Pose2D toPoint = new Pose2D(DistanceUnit.MM,Constants.pickUpSpecimen.getX(DistanceUnit.MM)-40, Constants.pickUpSpecimen.getY(DistanceUnit.MM), AngleUnit.DEGREES, Constants.pickUpSpecimen.getHeading(AngleUnit.DEGREES));
-                    driveTrain.DriveToPoint(toPoint, pos, 0.9);
+                    // prepare for pick up
+                    Pose2D toPoint = new Pose2D(DistanceUnit.MM,Constants.pickUpSpecimen.getX(DistanceUnit.MM)+10, Constants.pickUpSpecimen.getY(DistanceUnit.MM), AngleUnit.DEGREES, Constants.pickUpSpecimen.getHeading(AngleUnit.DEGREES));
+                    driveTrain.DriveToPointGoThrough(toPoint, pos, 0.9);
+                    if (DriveTrain.getDistanceToPointY(toPoint, pos) < 80) {
+                        driveTrain.DriveToPointGoThrough(toPoint, pos, 0.5);
+                    } else {
+                        driveTrain.DriveToPointGoThrough(toPoint, pos, 0.9);
+                    }
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
-                    if (DriveTrain.getDistanceToPointX(toPoint, pos) < 60 && DriveTrain.getDistanceToPointY(toPoint, pos) < 250 && currentStateTimeElapsed > 500) {
+                    if (DriveTrain.getDistanceToPointY(toPoint, pos) < 40 && currentStateTimeElapsed > 500) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
                     }
                 } else if (substepnum == 7) {
+                    // go to pick up
+                    Pose2D toPoint = new Pose2D(DistanceUnit.MM,Constants.pickUpSpecimen.getX(DistanceUnit.MM)-40, Constants.pickUpSpecimen.getY(DistanceUnit.MM), AngleUnit.DEGREES, Constants.pickUpSpecimen.getHeading(AngleUnit.DEGREES));
+                    driveTrain.DriveToPoint(toPoint, pos, 0.9);
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
+                    if (DriveTrain.getDistanceToPointX(toPoint, pos) < 60 && DriveTrain.getDistanceToPointY(toPoint, pos) < 100 && currentStateTimeElapsed > 200) {
+                        currentStateStartTime = System.currentTimeMillis();
+                        substepnum++;
+                    }
+                } else if (substepnum == 8) {
                     // close claw
                     driveTrain.DriveFieldCentric(0,-0.2,Math.PI,pos.getHeading(AngleUnit.RADIANS),1, null);
                     claw.moveToPos(CustomServo.Position.close);

@@ -39,8 +39,8 @@ public class TeleopMain extends LinearOpMode {
                 hardwareMap.get(DcMotorEx.class, "frontRight"));
 
         // init claw
-        CustomServo claw = new CustomServo(0.7, 0.42);
-        CustomServo clawRotate = new CustomServo(0, 1, 0.475, 0.008);
+        CustomServo claw = new CustomServo(0.7, 0.42, 0.54);
+        CustomServo clawRotate = new CustomServo(0, 1, 0.475, 0.012);
         claw.init(hardwareMap.get(Servo.class, "claw"), CustomServo.Position.none);
         clawRotate.init(hardwareMap.get(Servo.class, "clawRotate"), CustomServo.Position.mid);
 
@@ -160,6 +160,7 @@ public class TeleopMain extends LinearOpMode {
                 currentPreset = SlidesAndRotate.Presets.Middle;
             } else if (currentGamepad1.guide && !previousGamepad1.guide || currentGamepad2.guide && !previousGamepad2.guide) {
                 currentPreset = SlidesAndRotate.Presets.Ascent;
+                driveTrain.stopMotors();
             }
 
             // do slide rotation and extension
@@ -190,7 +191,7 @@ public class TeleopMain extends LinearOpMode {
 
 
             if (currentGamepad1.left_stick_x != 0 || currentGamepad1.right_stick_x != 0 || currentGamepad1.left_stick_y != 0 || currentGamepad1.triangle || currentGamepad1.cross || currentGamepad1.circle || currentGamepad1.square) {
-                double shift = currentGamepad1.right_stick_button ? Math.PI/4 : 0;
+                double shift = currentGamepad1.left_stick_button ? Math.PI/4 : 0;
                 // gamepad 1 driving
                 if (currentGamepad1.square) r=Math.PI/2 + shift;
                 else if (currentGamepad1.triangle) r=shift;
@@ -273,6 +274,20 @@ public class TeleopMain extends LinearOpMode {
             if (currentGamepad2.left_bumper) clawRotate.move(LastFrameTime, true);
             if (currentGamepad2.right_bumper) clawRotate.move(LastFrameTime, false);
             if (currentGamepad1.share || currentGamepad2.share) clawRotate.moveToPos(CustomServo.Position.mid);
+
+            // do reset odo heading
+            if (currentGamepad1.touchpad_finger_1) {
+                telemetry.addLine("Touchpad 1");
+                if (currentGamepad1.touchpad_finger_1_x < 0) {
+                    telemetry.addLine("90 degrees");
+                    odo.setPosition(new Pose2D(DistanceUnit.MM, pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), AngleUnit.DEGREES, 90));
+                    lastR = Math.PI/2;
+                } else {
+                    telemetry.addLine("0 degrees");
+                    odo.setPosition(new Pose2D(DistanceUnit.MM, pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), AngleUnit.DEGREES, 0));
+                    lastR = 0;
+                }
+            }
 
 
             // do telemetry

@@ -236,14 +236,13 @@ public class DriveTrain {
 
 
     private final double momentOfInertia = 1.0; // Adjustable turning inertia
-    private final double maxSpeed = 1.0; // Maximum wheel speed
     private final double linearInertia = 0.1; // Adjustable inertia for movement
 
     public enum TurnMode {
         CLOCKWISE, COUNTERCLOCKWISE, SHORTEST
     }
 
-    public void goToPointSmooth(Pose2D toPoint, Pose2D pos, TurnMode turnMode, double endVelocity) {
+    public void goToPointSmooth(Pose2D toPoint, Pose2D pos, double maxSpeed, TurnMode turnMode, double endVelocity) {
 
 
         double targetX = toPoint.getX(DistanceUnit.MM);
@@ -265,7 +264,7 @@ public class DriveTrain {
         }*/
 
         double targetDirection = Math.toDegrees(Math.atan2(deltaY, deltaX));
-        double movementError = normalizeAngle(targetDirection - currentAngle);
+        //double movementError = normalizeAngle(targetDirection - currentAngle);
 
         double speed = Math.min(distance * linearInertia + endVelocity, maxSpeed);
 

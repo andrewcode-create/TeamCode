@@ -233,7 +233,7 @@ public class AutoSample extends LinearOpMode {
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.LowBasket);
                     slidesAndRotate.Rotate(SlidesAndRotate.Presets.LowBasket);
                     Pose2D toPoint = Constants.Basket;
-                    if (currentStateTimeElapsed > 2000) driveTrain.DriveToPoint(toPoint, pos, 0.6);
+                    if (currentStateTimeElapsed > 2000) driveTrain.goToPointSmooth(toPoint,pos, 0.6, DriveTrain.TurnMode.CLOCKWISE, 0);
                     if (DriveTrain.getDistanceToPoint(toPoint, pos) < 30 && currentStateTimeElapsed > 5000) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
@@ -292,15 +292,15 @@ public class AutoSample extends LinearOpMode {
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.LowBasket);
                     slidesAndRotate.Rotate(SlidesAndRotate.Presets.LowBasket);
                     Pose2D toPoint = Constants.Basket;
-                    if (currentStateTimeElapsed > 2000) driveTrain.DriveToPoint(toPoint, pos, 0.5);
-                    if (DriveTrain.getDistanceToPoint(toPoint, pos) < 30 && currentStateTimeElapsed > 12000) {
+                    if (currentStateTimeElapsed > 2000) driveTrain.goToPointSmooth(toPoint,pos, 0.6, DriveTrain.TurnMode.CLOCKWISE, 0); //.DriveToPoint(toPoint, pos, 0.5);
+                    if (DriveTrain.getDistanceToPoint(toPoint, pos) < 30 && currentStateTimeElapsed > 3000) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
                     }
                 } else if (substepnum == 2) {
                     // open claw
                     claw.moveToPos(CustomServo.Position.open);
-                    driveTrain.Drive(0,0,0,0,0);
+                    driveTrain.stopMotors();
                     if (currentStateTimeElapsed > 2000) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;

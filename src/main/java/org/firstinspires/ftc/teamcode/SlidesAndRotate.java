@@ -38,8 +38,8 @@ public class SlidesAndRotate {
         WallPickup(0, 0, entryType.encoder),
         TopSpecimen(2550, 0, entryType.encoder),
         TopSpecimenXTraHigh(2650, 0, entryType.encoder),
-        DropTopSpecimen(1775, 0, entryType.encoder),
-        Middle(1750, 2300, entryType.encoder),
+        DropTopSpecimen(1740, 0, entryType.encoder),
+        Middle(1125, 2200, entryType.encoder),
         LowBasket(3550, 250, entryType.encoder),
         Ascent(0, 0, entryType.encoder),
         FloorPickup(980, 2630, entryType.encoder),
@@ -79,6 +79,7 @@ public class SlidesAndRotate {
     public final int RotateVEncoder = 0;
     public final int RotateHEncoder = 2600;
     private final int RotateBuffer = 200;
+    private final int RotateBufferUpDown = 100;
 
     public final int SlideMaxEncoder = 4080;
     public final double SlideMaxLength = 25.5;
@@ -230,11 +231,11 @@ public class SlidesAndRotate {
             }
         }
 
-        if (slideRotate.getCurrentPosition() > RotateDownLim - RotateBuffer) {
+        if (slideRotate.getCurrentPosition() > RotateDownLim - RotateBufferUpDown) {
             // allow up but not down
             slideRotate.setPower(Math.min(speed, 0));
             slideRotate2.setPower(Math.min(speed, 0));
-        } else if (slideRotate.getCurrentPosition() < RotateUpLim + RotateBuffer) {
+        } else if (slideRotate.getCurrentPosition() < RotateUpLim + RotateBufferUpDown) {
             // allow down but not up
             slideRotate.setPower(Math.max(speed, 0));
             slideRotate2.setPower(Math.max(speed, 0));
