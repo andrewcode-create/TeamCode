@@ -362,7 +362,7 @@ public class AutoMain extends LinearOpMode {
                     }
                 } else if (substepnum == 6) {
                     // prepare for pick up
-                    Pose2D toPoint = new Pose2D(DistanceUnit.MM,Constants.pickUpSpecimen.getX(DistanceUnit.MM)+30, Constants.pickUpSpecimen.getY(DistanceUnit.MM)+140, AngleUnit.DEGREES, Constants.pickUpSpecimen.getHeading(AngleUnit.DEGREES));
+                    Pose2D toPoint = new Pose2D(DistanceUnit.MM,Constants.pickUpSpecimen.getX(DistanceUnit.MM)+60, Constants.pickUpSpecimen.getY(DistanceUnit.MM)+140, AngleUnit.DEGREES, Constants.pickUpSpecimen.getHeading(AngleUnit.DEGREES));
                     driveTrain.DriveToPointGoThrough(toPoint, pos, 0.9);
                     if (DriveTrain.getDistanceToPointY(toPoint, pos) < 100) {
                         driveTrain.DriveToPointGoThrough(toPoint, pos, 0.5);
