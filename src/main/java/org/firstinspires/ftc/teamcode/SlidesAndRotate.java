@@ -38,7 +38,7 @@ public class SlidesAndRotate {
         WallPickup(0, 0, entryType.encoder),
         TopSpecimen(2550, 0, entryType.encoder),
         TopSpecimenXTraHigh(2650, 0, entryType.encoder),
-        DropTopSpecimen(1740, 0, entryType.encoder),
+        DropTopSpecimen(1700, 0, entryType.encoder),
         Middle(1125, 2200, entryType.encoder),
         LowBasket(3550, 250, entryType.encoder),
         Ascent(0, 0, entryType.encoder),

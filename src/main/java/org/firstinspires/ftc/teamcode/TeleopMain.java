@@ -201,7 +201,9 @@ public class TeleopMain extends LinearOpMode {
                 driveTrain.DriveFieldCentric(currentGamepad1.left_stick_x, -currentGamepad1.left_stick_y, r, pos.getHeading(AngleUnit.RADIANS), speed, telemetry);
             } else {
                 // gamepad 2 driving
-                double X = currentGamepad2.left_stick_x;
+                r = pos.getHeading(AngleUnit.RADIANS) + (-Math.PI / 2.0)/2*currentGamepad2.right_stick_x;
+                driveTrain.DriveFieldCentric(currentGamepad2.left_stick_x, -currentGamepad2.left_stick_y, r, pos.getHeading(AngleUnit.RADIANS), 0.2, telemetry);
+                /*double X = currentGamepad2.left_stick_x;
                 double Y = -currentGamepad2.left_stick_y;
                 double rX = currentGamepad2.right_stick_x;
                 double rY = -currentGamepad2.right_stick_y;
@@ -246,7 +248,7 @@ public class TeleopMain extends LinearOpMode {
                         }
                     }
                 }
-                driveTrain.DriveFieldCentric(X, Y, r, pos.getHeading(AngleUnit.RADIANS), speed, telemetry);
+                driveTrain.DriveFieldCentric(X, Y, r, pos.getHeading(AngleUnit.RADIANS), speed, telemetry);*/
             }
 
             lastR = r;

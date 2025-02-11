@@ -82,7 +82,7 @@ public class EncoderTest extends LinearOpMode {
         telemetry.update();
         sleep(500);
         // set position to starting teleop position and heading
-        odo.setPosition(Constants.startingPosAutoSample);
+        //odo.setPosition(Constants.startingPosAutoSample);
         sleep(20);
 
 
@@ -130,7 +130,9 @@ public class EncoderTest extends LinearOpMode {
             telemetry.addData("Pressed", pressed);
 
             if (pressed) {
-                driveTrain.DriveToPoint(Constants.Drop5, pos, 1);
+                driveTrain.goToPointSmooth(new Pose2D(DistanceUnit.MM, 500, 0, AngleUnit.DEGREES, 0), pos, 1, DriveTrain.TurnMode.SHORTEST, 0);
+            } else {
+                driveTrain.stopMotors();
             }
 
 

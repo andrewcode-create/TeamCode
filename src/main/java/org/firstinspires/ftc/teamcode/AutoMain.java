@@ -181,7 +181,7 @@ public class AutoMain extends LinearOpMode {
                     }
                 } else if (substepnum == 2) {
                     // lower linear slide
-                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.DropTopSpecimen);
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.DropTopSpecimen, 1);
                     if (currentStateTimeElapsed > 600) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
@@ -332,7 +332,7 @@ public class AutoMain extends LinearOpMode {
                 } else if (substepnum == 3) {
                     // lower linear slide
                     driveTrain.DriveFieldCentric(0, 1, 0, pos.getHeading(AngleUnit.RADIANS), 0.1, null);
-                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.DropTopSpecimen);
+                    slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.DropTopSpecimen, 1);
                     if (currentStateTimeElapsed > 600) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
@@ -362,9 +362,9 @@ public class AutoMain extends LinearOpMode {
                     }
                 } else if (substepnum == 6) {
                     // prepare for pick up
-                    Pose2D toPoint = new Pose2D(DistanceUnit.MM,Constants.pickUpSpecimen.getX(DistanceUnit.MM)+10, Constants.pickUpSpecimen.getY(DistanceUnit.MM), AngleUnit.DEGREES, Constants.pickUpSpecimen.getHeading(AngleUnit.DEGREES));
+                    Pose2D toPoint = new Pose2D(DistanceUnit.MM,Constants.pickUpSpecimen.getX(DistanceUnit.MM)+30, Constants.pickUpSpecimen.getY(DistanceUnit.MM)+140, AngleUnit.DEGREES, Constants.pickUpSpecimen.getHeading(AngleUnit.DEGREES));
                     driveTrain.DriveToPointGoThrough(toPoint, pos, 0.9);
-                    if (DriveTrain.getDistanceToPointY(toPoint, pos) < 80) {
+                    if (DriveTrain.getDistanceToPointY(toPoint, pos) < 100) {
                         driveTrain.DriveToPointGoThrough(toPoint, pos, 0.5);
                     } else {
                         driveTrain.DriveToPointGoThrough(toPoint, pos, 0.9);
@@ -376,10 +376,10 @@ public class AutoMain extends LinearOpMode {
                     }
                 } else if (substepnum == 7) {
                     // go to pick up
-                    Pose2D toPoint = new Pose2D(DistanceUnit.MM,Constants.pickUpSpecimen.getX(DistanceUnit.MM)-40, Constants.pickUpSpecimen.getY(DistanceUnit.MM), AngleUnit.DEGREES, Constants.pickUpSpecimen.getHeading(AngleUnit.DEGREES));
+                    Pose2D toPoint = new Pose2D(DistanceUnit.MM,Constants.pickUpSpecimen.getX(DistanceUnit.MM)-40, Constants.pickUpSpecimen.getY(DistanceUnit.MM)+100, AngleUnit.DEGREES, Constants.pickUpSpecimen.getHeading(AngleUnit.DEGREES));
                     driveTrain.DriveToPoint(toPoint, pos, 0.9);
                     slidesAndRotate.MoveSlide(SlidesAndRotate.Presets.WallPickup);
-                    if (DriveTrain.getDistanceToPointX(toPoint, pos) < 60 && DriveTrain.getDistanceToPointY(toPoint, pos) < 100 && currentStateTimeElapsed > 200) {
+                    if (DriveTrain.getDistanceToPointX(toPoint, pos) < 60 && DriveTrain.getDistanceToPointY(toPoint, pos) < 40 && currentStateTimeElapsed > 200) {
                         currentStateStartTime = System.currentTimeMillis();
                         substepnum++;
                     }
