@@ -160,7 +160,6 @@ public class TeleopMain extends LinearOpMode {
                 currentPreset = SlidesAndRotate.Presets.Middle;
             } else if (currentGamepad1.guide && !previousGamepad1.guide || currentGamepad2.guide && !previousGamepad2.guide) {
                 currentPreset = SlidesAndRotate.Presets.Ascent;
-                driveTrain.stopMotors();
             }
 
             // do slide rotation and extension
@@ -189,20 +188,23 @@ public class TeleopMain extends LinearOpMode {
 
             double r = lastR;
 
-
-            if (currentGamepad1.left_stick_x != 0 || currentGamepad1.right_stick_x != 0 || currentGamepad1.left_stick_y != 0 || currentGamepad1.triangle || currentGamepad1.cross || currentGamepad1.circle || currentGamepad1.square) {
-                double shift = currentGamepad1.left_stick_button ? Math.PI/4 : 0;
-                // gamepad 1 driving
-                if (currentGamepad1.square) r=Math.PI/2 + shift;
-                else if (currentGamepad1.triangle) r=shift;
-                else if (currentGamepad1.circle) r=-Math.PI/2 + shift;
-                else if (currentGamepad1.cross) r=Math.PI + shift;
-                else r = pos.getHeading(AngleUnit.RADIANS) + (-Math.PI / 2.0)/2*currentGamepad1.right_stick_x;
-                driveTrain.DriveFieldCentric(currentGamepad1.left_stick_x, -currentGamepad1.left_stick_y, r, pos.getHeading(AngleUnit.RADIANS), speed, telemetry);
+            if (currentPreset == SlidesAndRotate.Presets.Ascent) {
+                driveTrain.stopMotors();
             } else {
-                // gamepad 2 driving
-                r = pos.getHeading(AngleUnit.RADIANS) + (-Math.PI / 2.0)/2*currentGamepad2.right_stick_x;
-                driveTrain.DriveFieldCentric(currentGamepad2.left_stick_x, -currentGamepad2.left_stick_y, r, pos.getHeading(AngleUnit.RADIANS), 0.2, telemetry);
+                if (currentGamepad1.left_stick_x != 0 || currentGamepad1.right_stick_x != 0 || currentGamepad1.left_stick_y != 0 || currentGamepad1.triangle || currentGamepad1.cross || currentGamepad1.circle || currentGamepad1.square) {
+                    double shift = currentGamepad1.left_stick_button ? Math.PI / 4 : 0;
+                    // gamepad 1 driving
+                    if (currentGamepad1.square) r = Math.PI / 2 + shift;
+                    else if (currentGamepad1.triangle) r = shift;
+                    else if (currentGamepad1.circle) r = -Math.PI / 2 + shift;
+                    else if (currentGamepad1.cross) r = Math.PI + shift;
+                    else
+                        r = pos.getHeading(AngleUnit.RADIANS) + (-Math.PI / 2.0) / 2 * currentGamepad1.right_stick_x;
+                    driveTrain.DriveFieldCentric(currentGamepad1.left_stick_x, -currentGamepad1.left_stick_y, r, pos.getHeading(AngleUnit.RADIANS), speed, telemetry);
+                } else {
+                    // gamepad 2 driving
+                    r = pos.getHeading(AngleUnit.RADIANS) + (-Math.PI / 2.0) / 2 * currentGamepad2.right_stick_x;
+                    driveTrain.DriveFieldCentric(currentGamepad2.left_stick_x, -currentGamepad2.left_stick_y, r, pos.getHeading(AngleUnit.RADIANS), 0.2, telemetry);
                 /*double X = currentGamepad2.left_stick_x;
                 double Y = -currentGamepad2.left_stick_y;
                 double rX = currentGamepad2.right_stick_x;
@@ -249,6 +251,7 @@ public class TeleopMain extends LinearOpMode {
                     }
                 }
                 driveTrain.DriveFieldCentric(X, Y, r, pos.getHeading(AngleUnit.RADIANS), speed, telemetry);*/
+                }
             }
 
             lastR = r;
