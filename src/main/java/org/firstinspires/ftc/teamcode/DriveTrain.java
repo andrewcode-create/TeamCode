@@ -242,6 +242,7 @@ public class DriveTrain {
         CLOCKWISE, COUNTERCLOCKWISE, SHORTEST
     }
 
+
     public void goToPointSmooth(Pose2D toPoint, Pose2D pos, double maxSpeed, TurnMode turnMode, double endVelocity) {
 
 
@@ -257,11 +258,6 @@ public class DriveTrain {
         double deltaY = targetY - currentY;
         double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-        /*
-        if (distance < stoppingThreshold) {
-            stopMotors();
-            return;
-        }*/
 
         double targetDirection = Math.toDegrees(Math.atan2(deltaY, deltaX));
         //double movementError = normalizeAngle(targetDirection - currentAngle);
@@ -281,12 +277,27 @@ public class DriveTrain {
         double strafeX = Math.cos(Math.toRadians(targetDirection)) * speed;
         double strafeY = Math.sin(Math.toRadians(targetDirection)) * speed;
 
+        double fl = strafeX + strafeY + turnSpeed;
+        double bl = strafeX - strafeY + turnSpeed;
+        double fr = strafeX - strafeY - turnSpeed;
+        double br = strafeX + strafeY - turnSpeed;
+
+        double denominator = (Math.max(Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br))), 1));
+
+
+        fl /= denominator;
+        bl /= denominator;
+        fr /= denominator;
+        br /= denominator;
+
         // Omni-wheel kinematics
-        frontLeft.setPower(Math.max(0, Math.min(1, strafeX - strafeY - turnSpeed)));
-        frontRight.setPower(Math.max(0, Math.min(1, strafeX + strafeY + turnSpeed)));
-        backLeft.setPower(Math.max(0, Math.min(1, -strafeX + strafeY - turnSpeed)));
-        backRight.setPower(Math.max(0, Math.min(1, -strafeX - strafeY + turnSpeed)));
+        frontLeft.setPower(fl);
+        backLeft.setPower(bl);
+        frontRight.setPower(fr);
+        backRight.setPower(br);
     }
+
+
 
     public void stopMotors() {
         frontLeft.setPower(0);
