@@ -281,7 +281,7 @@ public class TeleopMain extends LinearOpMode {
             if (currentGamepad1.share || currentGamepad2.share) clawRotate.moveToPos(CustomServo.Position.mid);
 
             // do reset odo heading
-            if (currentGamepad1.touchpad_finger_1) {
+            if (currentGamepad1.touchpad_finger_1 && currentGamepad1.options) {
                 telemetry.addLine("Touchpad 1");
                 if (currentGamepad1.touchpad_finger_1_x < 0) {
                     telemetry.addLine("90 degrees");
